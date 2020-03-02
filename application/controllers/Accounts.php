@@ -8,13 +8,14 @@ class Accounts extends CI_Controller {
             parent::__construct();
 
             if (!is_cli()) :
-                echo "<p>These tools can only be run from the command line.</p>";
-                die();
+                // echo "<p>These tools can only be run from the command line.</p>";
+                // die();
             endif;
     }
     
     public function index()
     {
-        echo "Hello World!".PHP_EOL;
+       // echo $this->user->getUsers();
+        echo $this->user->getUser(882032);
     }
 }
