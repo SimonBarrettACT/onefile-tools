@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use GuzzleHttp\Client;
 
-class User_model extends CI_Model {
+class Placement_model extends CI_Model {
 
     var    $client;
     public $sessionKey;
@@ -38,10 +38,10 @@ class User_model extends CI_Model {
 
     }
 
-	public function getUser($id=0) {
+	public function getPlacement($id=0) {
 		
 		//Request Learner
-		$response = $this->client->request('GET', "User/$id",
+		$response = $this->client->request('GET', "Placement/$id",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -52,21 +52,20 @@ class User_model extends CI_Model {
 			]
 		]);
 
-		//Return User
+		//Return Placement
 		return $response->getBody();
         
 	}
 	
-	public function getUsers($role=1) {
+	public function getPlacements() {
 		
 		//Set parameters
 		$parameters = [
-			'role' => $role,
 			'organisationID' => $this->organisationID
 		];
 
 		//Request Learner
-		$response = $this->client->request('POST', "User/Search",
+		$response = $this->client->request('POST', "Placement/Search",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -75,12 +74,12 @@ class User_model extends CI_Model {
 			'form_params' => $parameters
 		]);
 
-		//Return Users
+		//Return Placements
 		return $response->getBody();
         
 	}
 	
-	public function createUser($newParameters) {
+	public function createPlacement($newParameters) {
 		//Set parameters
 		$basicParameters = [
 			'organisationID' => $this->organisationID
@@ -89,7 +88,7 @@ class User_model extends CI_Model {
 		$parameters = array_merge($basicParameters, $newParameters);
 
 		//Request Learner
-		$response = $this->client->request('POST', "User",
+		$response = $this->client->request('POST', "Placement",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -103,7 +102,7 @@ class User_model extends CI_Model {
 
 	}
 
-  	public function updateUser($id, $updatedParameters) {
+  	public function updatePlacement($id, $updatedParameters) {
 		
 		//Set parameters
 		$basicParameters = [
@@ -113,7 +112,7 @@ class User_model extends CI_Model {
 		$parameters = array_merge($basicParameters, $updatedParameters);
 
 		//Request Learner
-		$response = $this->client->request('POST', "User/$id",
+		$response = $this->client->request('POST', "Placement/$id",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -122,47 +121,10 @@ class User_model extends CI_Model {
 			'form_params' => $parameters
 		]);
 
-		//Return User
+		//Return Placement
 		return $response->getBody();
     
   }
 
-	public function deleteUser($id) {
-
-			//Set parameters
-			$basicParameters = [
-				'organisationID' => $this->organisationID
-			];
-
-			//Delete Learner
-			$response = $this->client->request('DELETE', "User/$id",
-			[
-				'headers' => [
-				'X-TokenID' => strval($this->sessionKey),
-				'Content-Type' => 'application/x-www-form-urlencoded'
-				],
-				'form_params' => $basicParameters
-			]);
-
-	}
-
-	public function archiveUser($id) {
-
-		//Set parameters
-		$basicParameters = [
-			'organisationID' => $this->organisationID
-		];
-
-		//Archive User
-		$response = $this->client->request('POST', "User/$id/Archive",
-		[
-			'headers' => [
-			'X-TokenID' => strval($this->sessionKey),
-			'Content-Type' => 'application/x-www-form-urlencoded'
-			],
-			'form_params' => $basicParameters
-		]);
-
-}
 
 }
