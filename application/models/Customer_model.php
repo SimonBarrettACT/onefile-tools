@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use GuzzleHttp\Client;
 
-class Placement_model extends CI_Model {
+class Customer_model extends CI_Model {
 
     var    $client;
     public $sessionKey;
@@ -38,10 +38,9 @@ class Placement_model extends CI_Model {
 
     }
 
-	public function getPlacement($id) {
-		try {
-		//Request a placement by id
-		$response = $this->client->request('GET', "Placement/$id",
+	public function getCustomer() {
+		//Request all Learners
+		$response = $this->client->request('GET', "Customer",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -49,37 +48,9 @@ class Placement_model extends CI_Model {
 			]
 		]);
 
-		//Return Placement
+		//Return Customer
 		return $response->getBody();
-		
-		} catch (Exception $e) {
-			return '{"ID": "' . $id . '", "Message": "The placement was not found."}';			
-		}
         
-	} 
-
-	public function getPlacements() {
-		
-		try {
-		//Request all placements
-		$response = $this->client->request('POST', "Placement/Search",
-		[
-			'headers' => [
-			'X-TokenID' => strval($this->sessionKey),
-			'Content-Type' => 'application/x-www-form-urlencoded'
-			],
-			'form_params' => [
-				'OrganisationID' => $this->organisationID
-			]
-		]);
-
-		//Return Placements
-		return $response->getBody();
-
-			} catch (Exception $e) {
-				return '{"Message": "No placements were found."}';
-			}
-		  
 	} 
 
 }

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Placements extends CI_Controller {
+class Placement extends CI_Controller {
 
     public function __construct()
     {
@@ -15,15 +15,14 @@ class Placements extends CI_Controller {
     
     public function index()
     {
-      echo "Help will appear here. Eventually!".PHP_EOL;     
-    }
-
-    public function all()
-    {
         echo $this->placement->getPlacements();
     }
 
- 
+    public function id($id)
+    {
+        
+        echo $this->placement->getPlacement($id);
+
+    }
 
 }
-

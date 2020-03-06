@@ -135,4 +135,5 @@ $autoload['language'] = array();
 $autoload['model'] = array('user_model' => 'user',
                            'import_model' => 'import',
                            'classroom_model' => 'classroom',
-                           'placement_model' => 'placement');
+                           'placement_model' => 'placement',
+                           'customer_model' => 'customer');
