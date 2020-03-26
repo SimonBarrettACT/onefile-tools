@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use GuzzleHttp\Client;
 
-class Placement_model extends CI_Model {
+class Organisation_model extends CI_Model {
 
     var    $client;
     public $sessionKey;
@@ -38,10 +38,9 @@ class Placement_model extends CI_Model {
 
     }
 
-	public function getPlacement($id) {
-		try {
-		//Request a placement by id
-		$response = $this->client->request('GET', "Placement/$id",
+	public function getOrganisation($id) {
+		//Request Organisation
+		$response = $this->client->request('GET', "Organisation/$id",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -49,16 +48,12 @@ class Placement_model extends CI_Model {
 			]
 		]);
 
-		//Return Placement
+		//Return Organisation
 		return $response->getBody();
-		
-		} catch (Exception $e) {
-			return null;			
-		}
         
 	} 
 
-	public function getPlacements($newParameters=[], $pageNumber=0, $pageSize=50) {
+	public function getOrganisations($newParameters=[], $pageNumber=0, $pageSize=50) {
 
 		//Set parameters
 		$basicParameters = [
@@ -70,12 +65,12 @@ class Placement_model extends CI_Model {
 	try {
 
 	If ($pageNumber > 0) {
-		$url = "Placement/Search/$pageNumber/$pageSize";
+		$url = "Organisation/Search/$pageNumber/$pageSize";
 	} else {
-		$url = "Placement/Search";
+		$url = "Organisation/Search";
 	}
 
-	//Request placements
+	//Request classrooms
 	$response = $this->client->request('POST', $url,
 	[
 		'headers' => [
@@ -85,7 +80,7 @@ class Placement_model extends CI_Model {
 		'form_params' => $parameters
 	]);
 
-	//Return Placements
+	//Return Classrooms
 	return $response->getBody();
 
 
@@ -95,63 +90,49 @@ class Placement_model extends CI_Model {
 			
 }
 
-public function createPlacement($newParameters) {
-	//Set parameters
-	$basicParameters = [
-		'organisationID' => $this->organisationID
-	];
-
-	$parameters = array_merge($basicParameters, $newParameters);
-
-	try {
-
-	//Create Placement
-	$response = $this->client->request('POST', "Placement",
+public function getLearningAimStatuses($organisationId) {
+	//Request Organisation
+	$response = $this->client->request('GET', "Organisation/$organisationId/LearningAimStatuses",
 	[
 		'headers' => [
 		'X-TokenID' => strval($this->sessionKey),
 		'Content-Type' => 'application/x-www-form-urlencoded'
-		],
-		'form_params' => $parameters
+		]
 	]);
 
-	//Return response
+	//Return LearningAimStatuses
 	return $response->getBody();
+			
+} 
 
-	} catch (Exception $e) {
-		return null;			
-	}
+public function getLearnerStatuses($organisationId) {
+	//Request Organisation
+	$response = $this->client->request('GET', "Organisation/$organisationId/LearnerStatuses",
+	[
+		'headers' => [
+		'X-TokenID' => strval($this->sessionKey),
+		'Content-Type' => 'application/x-www-form-urlencoded'
+		]
+	]);
 
-}
+	//Return LearnerStatuses
+	return $response->getBody();
+			
+} 
 
-public function updatePlacement($id, $updatedParameters) {
-		
-	//Set parameters
-	$basicParameters = [
-		'organisationID' => $this->organisationID
-	];
+public function getAssignedStandards($organisationId) {
+	//Request Organisation
+	$response = $this->client->request('GET', "Organisation/$organisationId/AssignedStandards",
+	[
+		'headers' => [
+		'X-TokenID' => strval($this->sessionKey),
+		'Content-Type' => 'application/x-www-form-urlencoded'
+		]
+	]);
 
-	$parameters = array_merge($basicParameters, $updatedParameters);
-
-	try {
-		//Update Placement
-		$response = $this->client->request('POST', "Placement/$id",
-		[
-			'headers' => [
-			'X-TokenID' => strval($this->sessionKey),
-			'Content-Type' => 'application/x-www-form-urlencoded'
-			],
-			'form_params' => $parameters
-		]);
-		
-		//Return success
-		return true;
-
-	} catch (Exception $e) {
-		return false;			
-	}
-	
-}
-
+	//Return AssignedStandards
+	return $response->getBody();
+			
+} 
 
 }

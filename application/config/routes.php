@@ -55,8 +55,51 @@ $route['translate_uri_dashes'] = TRUE;
 
 /*
 | -------------------------------------------------------------------------
-| Sample REST API Routes
+| REST API Routes
 | -------------------------------------------------------------------------
 */
-$route['api/example/users/(:num)'] = 'api/example/users/id/$1'; // Example 4
-$route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/id/$1/format/$3$4'; // Example 8
+
+$route['api/(:any)/classroom']                      = 'api/classroom';
+$route['api/(:any)/classroom/(:num)']               = 'api/classroom/id/$2';
+$route['api/(:any)/classroom/search']               = 'api/classroom/search';
+$route['api/(:any)/classroom/search/(:num)']        = 'api/classroom/search/$2';
+$route['api/(:any)/classroom/search/(:num)/(:num)'] = 'api/classroom/search/$2/$3';
+
+$route['api/(:any)/customer']                       = 'api/customer';
+
+$route['api/(:any)/organisation/(:num)']                = 'api/organisation/id/$2';
+$route['api/(:any)/organisation/search']                = 'api/organisation/search';
+$route['api/(:any)/organisation/search/(:num)']         = 'api/organisation/search/$2';
+$route['api/(:any)/organisation/search/(:num)/(:num)']  = 'api/organisation/search/$2/$3';
+$route['api/(:any)/organisation/(:num)/learningaimstatuses'] = 'api/organisation/learningaimstatuses/$2';
+$route['api/(:any)/organisation/(:num)/learnerstatuses'] = 'api/organisation/learnerstatuses/$2';
+$route['api/(:any)/organisation/(:num)/assignedstandards'] = 'api/organisation/assignedstandards/$2';
+
+$route['api/(:any)/placement']                      = 'api/placement';
+$route['api/(:any)/placement/(:num)']               = 'api/placement/id/$2';
+$route['api/(:any)/placement/search']               = 'api/placement/search';
+$route['api/(:any)/placement/search/(:num)']        = 'api/placement/search/$2';
+$route['api/(:any)/placement/search/(:num)/(:num)'] = 'api/placement/search/$2/$3';
+
+$route['api/(:any)/plan/(:num)']                  = 'api/plan/id/$2';
+$route['api/(:any)/plan/search']                  = 'api/plan/search';
+$route['api/(:any)/plan/search/(:num)']           = 'api/plan/search/$2';
+$route['api/(:any)/plan/search/(:num)/(:num)']    = 'api/plan/search/$2/$3';
+
+$route['api/(:any)/provider']                      = 'api/provider';
+$route['api/(:any)/provider/(:num)']               = 'api/provider/id/$2';
+$route['api/(:any)/provider/search']               = 'api/provider/search';
+$route['api/(:any)/provider/search/(:num)']        = 'api/provider/search/$2';
+$route['api/(:any)/provider/search/(:num)/(:num)'] = 'api/provider/search/$2/$3';
+
+$route['api/(:any)/review']                         = 'api/review';
+$route['api/(:any)/review/(:num)']                  = 'api/review/id/$2';
+$route['api/(:any)/review/search']                  = 'api/review/search';
+$route['api/(:any)/review/search/(:num)']           = 'api/review/search/$2';
+$route['api/(:any)/review/search/(:num)/(:num)']    = 'api/review/search/$2/$3';
+
+$route['api/(:any)/standard/(:num)/assign/(:num)']  = 'api/standard/assign/$2/$3';
+$route['api/(:any)/standard/(:num)']                = 'api/standard/id/$2';
+$route['api/(:any)/standard/search']                = 'api/standard/search';
+$route['api/(:any)/standard/search/(:num)']         = 'api/standard/search/$2';
+$route['api/(:any)/standard/search/(:num)/(:num)']  = 'api/standard/search/$2/$3';

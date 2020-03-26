@@ -28,13 +28,13 @@ class Customer_model extends CI_Model {
         //api token
         $this->customerToken  = env('ONEFILE_API_KEY');
 
-		//Authenticate
-		$response = $this->client->request('POST', 'Authentication',
-		['headers' => [
-			'X-CustomerToken' => $this->customerToken,
-			'Content-Type' => 'application/x-www-form-urlencoded'
-			]]);
-		$this->sessionKey = $response->getBody();
+			//Authenticate
+			$response = $this->client->request('POST', 'Authentication',
+			['headers' => [
+				'X-CustomerToken' => $this->customerToken,
+				'Content-Type' => 'application/x-www-form-urlencoded'
+				]]);
+			$this->sessionKey = $response->getBody();
 
     }
 

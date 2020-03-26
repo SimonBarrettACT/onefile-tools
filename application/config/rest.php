@@ -71,7 +71,7 @@ $config['enable_emulate_request'] = TRUE;
 | e.g: My Secret REST API
 |
 */
-$config['rest_realm'] = 'REST API';
+$config['rest_realm'] = 'OneFile Tools API';
 
 /*
 |--------------------------------------------------------------------------

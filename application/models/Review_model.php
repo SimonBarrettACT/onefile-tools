@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use GuzzleHttp\Client;
 
-class Classroom_model extends CI_Model {
+class Review_model extends CI_Model {
 
     var    $client;
     public $sessionKey;
@@ -38,11 +38,11 @@ class Classroom_model extends CI_Model {
 
   }
 
-	public function getClassroom($id=0) {
+	public function getReview($id=0) {
 		
 		try {
 		//Request Learner
-		$response = $this->client->request('GET', "Classroom/$id",
+		$response = $this->client->request('GET', "Review/$id",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -53,7 +53,7 @@ class Classroom_model extends CI_Model {
 			]
 		]);
 
-		//Return Classroom
+		//Return Review
 		return $response->getBody();
 
 		} catch (Exception $e) {
@@ -62,7 +62,7 @@ class Classroom_model extends CI_Model {
         
 	}
 	
-	public function getClassrooms($newParameters=[], $pageNumber=0, $pageSize=50) {
+	public function getReviews($newParameters=[], $pageNumber=0, $pageSize=50) {
 
 			//Set parameters
 			$basicParameters = [
@@ -74,12 +74,12 @@ class Classroom_model extends CI_Model {
 		try {
 
 		If ($pageNumber > 0) {
-			$url = "Classroom/Search/$pageNumber/$pageSize";
+			$url = "Review/Search/$pageNumber/$pageSize";
 		} else {
-			$url = "Classroom/Search";
+			$url = "Review/Search";
 		}
 
-		//Request classrooms
+		//Request Reviews
 		$response = $this->client->request('POST', $url,
 		[
 			'headers' => [
@@ -89,7 +89,7 @@ class Classroom_model extends CI_Model {
 			'form_params' => $parameters
 		]);
 
-		//Return Classrooms
+		//Return Reviews
 		return $response->getBody();
 
 
@@ -99,7 +99,7 @@ class Classroom_model extends CI_Model {
         
 	}
 	
-	public function createClassroom($newParameters) {
+	public function createReview($newParameters) {
 		//Set parameters
 		$basicParameters = [
 			'organisationID' => $this->organisationID
@@ -109,8 +109,8 @@ class Classroom_model extends CI_Model {
 
 		try {
 
-		//Create Classroom
-		$response = $this->client->request('POST', "Classroom",
+		//Create Provider
+		$response = $this->client->request('POST', "Review",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -127,35 +127,5 @@ class Classroom_model extends CI_Model {
 		}
 
 	}
-
-  	public function updateClassroom($id, $updatedParameters) {
-		
-		//Set parameters
-		$basicParameters = [
-			'organisationID' => $this->organisationID
-		];
-
-		$parameters = array_merge($basicParameters, $updatedParameters);
-
-		try {
-			//Update Classroom
-			$response = $this->client->request('POST', "Classroom/$id",
-			[
-				'headers' => [
-				'X-TokenID' => strval($this->sessionKey),
-				'Content-Type' => 'application/x-www-form-urlencoded'
-				],
-				'form_params' => $parameters
-			]);
-			
-			//Return success
-			return true;
-	
-		} catch (Exception $e) {
-			return false;			
-		}
-		
-  }
-
 
 }
