@@ -107,6 +107,7 @@ class Standard extends REST_Controller {
     {
         
         $parameters = $this->post();
+
         $json = $this->standard->getStandards($parameters, $pageNumber, $pageSize);
 
         $return = json_decode($json, true);

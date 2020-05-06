@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use GuzzleHttp\Client;
 
-class Review_model extends CI_Model {
+class Unit_model extends CI_Model {
 
     var    $client;
     public $sessionKey;
@@ -38,11 +38,11 @@ class Review_model extends CI_Model {
 
   }
 
-	public function getReview($id=0) {
+	public function getUnit($id=0) {
 		
 		try {
 		//Request Learner
-		$response = $this->client->request('GET', "Review/$id",
+		$response = $this->client->request('GET', "Unit/$id",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -53,9 +53,7 @@ class Review_model extends CI_Model {
 			]
 		]);
 
-		
-
-		//Return Review
+		//Return Unit
 		return $response->getBody();
 
 		} catch (Exception $e) {
@@ -64,7 +62,7 @@ class Review_model extends CI_Model {
         
 	}
 	
-	public function getReviews($newParameters=[], $pageNumber=0, $pageSize=50) {
+	public function getUnits($newParameters=[], $pageNumber=0, $pageSize=50) {
 
 			//Set parameters
 			$basicParameters = [
@@ -76,12 +74,12 @@ class Review_model extends CI_Model {
 		try {
 
 		If ($pageNumber > 0) {
-			$url = "Review/Search/$pageNumber/$pageSize";
+			$url = "Unit/Search/$pageNumber/$pageSize";
 		} else {
-			$url = "Review/Search";
+			$url = "Unit/Search";
 		}
 
-		//Request Reviews
+		//Request Units
 		$response = $this->client->request('POST', $url,
 		[
 			'headers' => [
@@ -91,7 +89,7 @@ class Review_model extends CI_Model {
 			'form_params' => $parameters
 		]);
 
-		//Return Reviews
+		//Return Units
 		return $response->getBody();
 
 
@@ -100,34 +98,25 @@ class Review_model extends CI_Model {
 		}
         
 	}
+
+	public function assignUnit($unitId, $learnerId, $standardId) {
+
+	try {
 	
-	public function createReview($newParameters) {
-		//Set parameters
-		$basicParameters = [
-			'organisationID' => $this->organisationID
-		];
-
-		$parameters = array_merge($basicParameters, $newParameters);
-
-		try {
-
-		//Create Provider
-		$response = $this->client->request('POST', "Review",
+		//Assign unit
+		$response = $this->client->request('POST', "Unit/$unitId/Assign/$learnerId/$standardId",
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
 			'Content-Type' => 'application/x-www-form-urlencoded'
 			],
-			'form_params' => $parameters
+			'form_params' => []
 		]);
 
-		//Return response
-		return $response->getBody();
-
-		} catch (Exception $e) {
-			return null;			
-		}
-
+	} catch (Exception $e) {
+		return $e->getMessage();			
 	}
+			
+}
 
 }

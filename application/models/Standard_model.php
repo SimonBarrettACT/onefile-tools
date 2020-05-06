@@ -65,9 +65,9 @@ class Standard_model extends CI_Model {
 	public function getStandards($newParameters=[], $pageNumber=0, $pageSize=50) {
 
 			//Set parameters
-			$basicParameters = [
+			$basicParameters = array(
 				'organisationID' => $this->organisationID
-			];
+			);
 	
 			$parameters = array_merge($basicParameters, $newParameters);
 
@@ -88,6 +88,8 @@ class Standard_model extends CI_Model {
 			],
 			'form_params' => $parameters
 		]);
+
+
 
 		//Return Standards
 		return $response->getBody();

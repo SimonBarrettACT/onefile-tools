@@ -16,7 +16,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Review extends REST_Controller {
+class Unit extends REST_Controller {
 
     function __construct()
     {
@@ -33,50 +33,26 @@ class Review extends REST_Controller {
             ], REST_Controller::HTTP_UNAUTHORIZED); // NOT_FOUND (404) being the HTTP response code
         endif;
 
-        $this->load->model('review_model', 'review');
+        $this->load->model('unit_model', 'unit');
 
     }
-
-    //Create a Review
-	public function index_post() {
-        $parameters = $this->post();
-
-        $json = $this->review->createReview($parameters);
+ 
+    public function assign_post($unitId, $learnerId, $standardId)
+    {
+        $json = $this->unit->assignUnit($unitId, $learnerId, $standardId);
         $return = json_decode($json, true);
 
-        if (is_integer($return))
-        {
-            $this->set_response([
-                'status' => TRUE,
-                'id' => $return,
-                'message' => 'A new review has been scheduled'
-            ], REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-        }
-        else
-        {
-            $this->set_response([
-                'status' => FALSE,
-                'error' => 'A review could not be scheduled'
-            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
-        }
+        $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
 
     }
-    
+
     public function id_get($id)
     {
 
-        // Find and return a single record for a particular review.
+        // Find and return a single record for a particular unit.
 
-        $id = (int) $id;
 
-        // Validate the id.
-        if ($id <= 0)
-        {
-            // Invalid id, set the response and exit.
-            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
-        }
-
-        $json = $this->review->getReview($id);
+        $json = $this->unit->getUnit($id);
         $return = json_decode($json, true);
 
         if (!empty($return))
@@ -87,19 +63,18 @@ class Review extends REST_Controller {
         {
             $this->set_response([
                 'status' => FALSE,
-                'error' => 'Review could not be found'
+                'error' => 'Unit could not be found'
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
 
 
     }    
 
-
     public function search_post($pageNumber=0,$pageSize=50)
     {
         $parameters = $this->post();
+        $json = $this->unit->getUnits($parameters, $pageNumber, $pageSize);
 
-        $json = $this->review->getReviews($parameters, $pageNumber, $pageSize);
 
         $return = json_decode($json, true);
 

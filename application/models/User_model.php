@@ -165,4 +165,47 @@ class User_model extends CI_Model {
 
 }
 
+	//Assign a user to a learner
+	public function assignUser($assignId, $assignParameters = []) {
+		
+		//Set parameters
+		$basicParameters = [
+			'organisationID' => $this->organisationID
+		];
+
+		$parameters = array_merge($basicParameters, $assignParameters);
+
+		//Assign User
+		$response = $this->client->request('POST', "User/$assignId/Assign",
+		[
+			'headers' => [
+			'X-TokenID' => strval($this->sessionKey),
+			'Content-Type' => 'application/x-www-form-urlencoded'
+			],
+			'form_params' => $parameters
+		]);
+
+		return $response->getBody();
+
+	}
+
+	public function getUserUnitSummary($id) {
+		
+		//Request Learner
+		$response = $this->client->request('GET', "User/$id/UnitSummary",
+		[
+			'headers' => [
+			'X-TokenID' => strval($this->sessionKey),
+			'Content-Type' => 'application/x-www-form-urlencoded'
+			],
+			'form_params' => [
+				'organisationID' => $this->organisationID
+			]
+		]);
+
+		//Return User Unit Summary
+		return $response->getBody();
+        
+	}
+
 }

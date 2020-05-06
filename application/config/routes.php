@@ -103,3 +103,24 @@ $route['api/(:any)/standard/(:num)']                = 'api/standard/id/$2';
 $route['api/(:any)/standard/search']                = 'api/standard/search';
 $route['api/(:any)/standard/search/(:num)']         = 'api/standard/search/$2';
 $route['api/(:any)/standard/search/(:num)/(:num)']  = 'api/standard/search/$2/$3';
+
+$route['api/(:any)/unit/(:any)/assign/(:num)/(:num)'] = 'api/unit/assign/$2/$3/$4';
+$route['api/(:any)/unit/(:any)']                      = 'api/unit/id/$2';
+$route['api/(:any)/unit/search']                      = 'api/unit/search';
+$route['api/(:any)/unit/search/(:num)']               = 'api/unit/search/$2';
+$route['api/(:any)/unit/search/(:num)/(:num)']        = 'api/unit/search/$2/$3';
+
+$route['api/(:any)/user']                           = 'api/user';
+$route['api/(:any)/user/(:num)']                    = 'api/user/id/$2';
+$route['api/(:any)/user/(:num)/assign']             = 'api/user/assign/$2';
+$route['api/(:any)/user/(:num)/unitsummary']        = 'api/user/unitsummary/$2';
+
+/*
+| -------------------------------------------------------------------------
+| REST Job Routes
+| -------------------------------------------------------------------------
+*/
+
+$route['job/(:any)/assign_assessors']           = 'jobs/assign_assessors';
+$route['job/(:any)/assign_observers']           = 'jobs/assign_observers';
+$route['job/(:any)/send_reviews']               = 'jobs/send_reviews';
