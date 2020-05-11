@@ -123,4 +123,5 @@ $route['api/(:any)/user/(:num)/unitsummary']        = 'api/user/unitsummary/$2';
 
 $route['job/(:any)/assign_assessors']           = 'jobs/assign_assessors';
 $route['job/(:any)/assign_observers']           = 'jobs/assign_observers';
+$route['job/(:any)/create_observers']           = 'jobs/create_observers';
 $route['job/(:any)/send_reviews']               = 'jobs/send_reviews';

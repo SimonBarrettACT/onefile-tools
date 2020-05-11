@@ -21,6 +21,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
+
 class Send_reviews extends REST_Controller {
 
     function __construct()
@@ -75,20 +76,46 @@ class Send_reviews extends REST_Controller {
         $reviewsFound = [];
         $rateLimiter();
 
+
         //Loop through the reviews and add to CSV
         if($reviews):
             foreach($reviews as $review):
                 $json = $this->review->getReview($review['ID']);
                 $found = json_decode($json, true);
+
+                //Process to add missing fields
+                $keys = array('ID','ScheduledFor','LearnerID','AssessorID','EmployerID','Status','CreatedOn','StartedOn','AssessorSignedOn','LearnerSignedOn','EmployerSignedOn','EndTime','VisitID','Progress');
+                $values = [];
+                foreach($keys as $key):
+                    if(!isset($found[$key])):
+                        $values[] = '';
+                    else:
+                        $values[] = $found[$key];
+                    endif;
+                endforeach;
+                $found = array_combine($keys, $values);
+
                 if($found) $reviewsFound = array_merge($reviewsFound, [$found]);
                 $rateLimiter();
             endforeach;
         endif;
 
         //Send or save report
-        
         if ($reviews):
             $counter = count($reviews);
+
+            try {
+                $header = array_keys($reviewsFound[0]);
+    
+                $writer = Writer::createFromPath(FCPATH.'output/file.csv', 'w+');
+                //insert the header
+                $writer->insertOne($header);
+                //insert records
+                $writer->insertAll($reviewsFound);
+            } catch (CannotInsertRecord $e) {
+                $e->getRecords(); //returns [1, 2, 3]
+            }
+
         else:
             $counter = 0;
         endif;
