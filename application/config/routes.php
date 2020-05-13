@@ -124,4 +124,4 @@ $route['api/(:any)/user/(:num)/unitsummary']        = 'api/user/unitsummary/$2';
 */
 
 // e.g. job/vX0aPh6MfG/show/reviews
-$route['job/(:any)/(:any)/(:any)'] = 'jobs/$2/$3';
+$route['jobs/(:any)/(:any)/(:any)'] = 'jobs/$2/$3';
