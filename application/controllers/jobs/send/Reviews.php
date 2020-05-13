@@ -43,6 +43,8 @@ class Reviews extends REST_Controller {
         $this->load->model('user_model', 'user');
         $this->load->model('review_model', 'review');
 
+        $this->load->library('email');
+
     }
     
     public function index_get()
@@ -141,6 +143,16 @@ class Reviews extends REST_Controller {
 
             $writer = new Xlsx($spreadsheet);
             $writer->save('/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx');
+
+            $this->email->from('simonbarrett@acttraining.org.uk', 'OneFile Tools');
+            $this->email->to('simonbarrett@icloud.com');
+            // $this->email->cc('another@another-example.com');
+            // $this->email->bcc('them@their-example.com');
+
+            $this->email->subject('Email Test');
+            $this->email->message('Testing the email class.');
+
+            $this->email->send();
 
             // try {
             //     $header = array_keys($reviewsFound[0]);
