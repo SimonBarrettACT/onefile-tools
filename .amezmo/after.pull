@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Make sure we fail our deployment if this hook fails.
+set -e;
+
+# More commands executed here.
+# Please see https://amezmo.xyz/docs/deployments/dependencies
+# for a full example
+
+# APPLICATION_ROOT is a default variable provided at hook execution time
+echo "Running this hook from ${APPLICATION_ROOT}";
+
+# Create our symbolic link to point our public storage directory
+# to our persistent storage directory
+ln \
+    --symbolic \
+    --force \
+    --no-dereference \
+    /webroot/storage/public "${APPLICATION_ROOT}/public/storage";
+    
