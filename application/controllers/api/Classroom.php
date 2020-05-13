@@ -25,6 +25,9 @@ class Classroom extends REST_Controller {
 
         $apiKey = $this->uri->segment(2);
 
+        echo $apiKey;
+        die();
+
         if (env('MY_API_KEY') !== $apiKey ):
             // Set the response and exit
             $this->response([
