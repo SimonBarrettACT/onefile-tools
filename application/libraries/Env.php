@@ -17,8 +17,8 @@ class Env
         endif;
 
         //Only initialize this library if .env exists
-        if(file_exists('/webroot/.env')):
-            $dotenv = Dotenv\Dotenv::create('/webroot');
+        if(file_exists('../.env')):
+            $dotenv = Dotenv\Dotenv::create('../');
             $dotenv->load();
         endif;
 
