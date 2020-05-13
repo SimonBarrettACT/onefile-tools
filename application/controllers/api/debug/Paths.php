@@ -16,7 +16,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Debug extends REST_Controller {
+class Paths extends REST_Controller {
 
     function __construct()
     {
@@ -37,11 +37,31 @@ class Debug extends REST_Controller {
 
     }
 
-
     public function index_get()
     {
+        
+        $return = directory_map('/webroot/');
 
-        $return = directory_map('/webroot/storage/');
+        if (!empty($return))
+        {
+            $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+        else
+        {
+            $this->set_response([
+                'status' => FALSE,
+                'error' => 'Debug info could not be found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }  
+
+    public function index_post()
+    {
+
+        $parameters = $this->post();
+        $return = directory_map($parameters['path']);
 
         if (!empty($return))
         {
