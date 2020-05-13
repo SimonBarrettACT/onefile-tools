@@ -15,7 +15,8 @@ class Env
             $dotenv = Dotenv\Dotenv::createImmutable(APPPATH . 'environment');
             $dotenv->load();
         else:
-            $dotenv = Dotenv\Dotenv::createImmutable('/current');
+            $envPath = s(FCPATH)->replaceSuffix('/public/');
+            $dotenv = Dotenv\Dotenv::createImmutable($envPath);
             $dotenv->load();
         endif;
 
