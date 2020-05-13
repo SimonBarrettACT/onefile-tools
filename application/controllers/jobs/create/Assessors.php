@@ -1,4 +1,3 @@
-
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -22,7 +21,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Archive_learners extends REST_Controller {
+class Assessors extends REST_Controller {
 
     function __construct()
     {
@@ -45,9 +44,41 @@ class Archive_learners extends REST_Controller {
     
     public function index_get()
     {
+        //Start rate limiter
+        $rateLimiter = ratelimiter();
 
+        // Set file properties
+		$observers = 'create_assessors.csv';
+        $local_path = APPPATH . '/imports/';
         
-        $return = array('status' => true, 'message' => "Job completed with $counter archived and $failed failures.");
+		// Fetch records 
+        $iteratorRecords = $this->csv->getRecords($local_path . $observers);
+        $records = iterator_to_array($iteratorRecords, true);
+
+        //Set counter
+        $counter = 0;
+        $failed = 0;
+
+        foreach($records as $record):
+            $createParameters = array(
+                "FirstName" => $record['FirstName'],
+                "LastName" => $record['LastName'],
+                "Email" => $record['Email'],
+                "Role" => 5
+            );
+            try {
+                $response = $this->user->createUser($createParameters);
+                ++$counter;
+                $rateLimiter();
+            } catch (Exception $e) {
+                //echo 'Caught exception: ',  $e->getMessage(), "\n";
+                ++$failed;
+            }
+
+        endforeach;
+
+
+        $return = array('status' => true, 'message' => "Job completed. Accounts created: $counter");
         $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
     }    
 

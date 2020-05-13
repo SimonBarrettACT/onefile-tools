@@ -1,5 +1,6 @@
 .DS_Store
 
+public/output/*.xlsx
 application/environment/.env
 
 application/cache/*

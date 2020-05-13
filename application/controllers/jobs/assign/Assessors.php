@@ -21,7 +21,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Assign_assessors extends REST_Controller {
+class Assessors extends REST_Controller {
 
     function __construct()
     {

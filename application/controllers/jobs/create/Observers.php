@@ -21,7 +21,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Assign_observers extends REST_Controller {
+class Observers extends REST_Controller {
 
     function __construct()
     {
@@ -48,53 +48,38 @@ class Assign_observers extends REST_Controller {
         $rateLimiter = ratelimiter();
 
         // Set file properties
-		$learners = 'assign_observers.csv';
+		$observers = 'create_observers.csv';
         $local_path = APPPATH . '/imports/';
         
 		// Fetch records 
-        $iteratorRecords = $this->csv->getRecords($local_path . $learners);
+        $iteratorRecords = $this->csv->getRecords($local_path . $observers);
         $records = iterator_to_array($iteratorRecords, true);
-
-        //Get all the learners from OneFile
-        $json = $this->user->getUsers();
-        $onefileLearners = json_decode($json, true);
-
-        $rateLimiter();
 
         //Set counter
         $counter = 0;
         $failed = 0;
-        
-        //Loop through the records
+
         foreach($records as $record):
-            //Observer
-            $observerID = intval($record['ObserverID']);
- 
-            $firstName = trim($record['FirstName']);
-            $lastName = trim($record['LastName']);
+            $createParameters = array(
+                "FirstName" => $record['FirstName'],
+                "LastName" => $record['LastName'],
+                "Email" => $record['Email'],
+                "PlacementID" => intval($record['PlacementID']),
+                "Role" => 45
+            );
+            try {
+                $response = $this->user->createUser($createParameters);
+                ++$counter;
+                $rateLimiter();
+            } catch (Exception $e) {
+                //echo 'Caught exception: ',  $e->getMessage(), "\n";
+                ++$failed;
+            }
 
-            //Find the learner from their first and second name
-            $keyFound = search_users($onefileLearners, false, $firstName, 'FirstName', $lastName, 'LastName');
-
-            if ($keyFound) :
-                $learnerID = intval($onefileLearners[$keyFound]['ID']);
-                $assignParameters = array('LearnerID' => $learnerID, 'Level' => 1);
-
-                try {
-                    $response = $this->user->assignUser($observerID, $assignParameters);
-                    ++$counter;
-                    $rateLimiter();
-                } catch (Exception $e) {
-                    echo 'Caught exception: ',  $e->getMessage(), "\n";
-                    die();
-                    ++$failed;
-                }
-
-            endif;
-            
         endforeach;
-        
-        $return = array('status' => true, 'message' => "Job completed with $counter assignments and $failed failures.");
+
+
+        $return = array('status' => true, 'message' => "Job completed. Accounts created: $counter");
         $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
     }    
 

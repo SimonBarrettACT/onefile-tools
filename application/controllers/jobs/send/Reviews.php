@@ -5,14 +5,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use GuzzleHttp\Client;
 use League\Csv\Writer;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 include APPPATH . 'third_party/Filters.php';
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 require APPPATH . '/libraries/REST_Controller.php';
 
 /**
- * This is an example of a few basic user interaction methods you could use
- * all done with a hardcoded array
  *
  * @package         CodeIgniter
  * @subpackage      Rest Server
@@ -22,7 +23,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
 
-class Send_reviews extends REST_Controller {
+class Reviews extends REST_Controller {
 
     function __construct()
     {
@@ -66,6 +67,8 @@ class Send_reviews extends REST_Controller {
         $dateFrom = $firstDay->format(DateTime::ATOM); 
         $dateTo = $lastDay->format(DateTime::ATOM);
 
+        $parameters = [];
+        
         $parameters['Status'] = 1;
         $parameters['DateFrom'] = $dateFrom;
         $parameters['DateTo'] = $dateTo;
@@ -76,6 +79,7 @@ class Send_reviews extends REST_Controller {
         $reviewsFound = [];
         $rateLimiter();
 
+        $statusList = array('', 'Not Started','Started but not signed', 'Signed by Assessor', 'Signed by Assessor and Learner');
 
         //Loop through the reviews and add to CSV
         if($reviews):
@@ -100,21 +104,50 @@ class Send_reviews extends REST_Controller {
             endforeach;
         endif;
 
+        $arrayData = [];
+        $arrayData[] = array_keys($reviewsFound[0]);
+
+        for ($x = 0; $x < count($reviewsFound); $x++):
+            //Set the status text
+            $reviewsFound[$x]['Status'] = '';
+            if($reviewsFound[$x]['ScheduledFor'])       $reviewsFound[$x]['Status'] = $statusList[1];  
+            if($reviewsFound[$x]['StartedOn'])          $reviewsFound[$x]['Status'] = $statusList[2]; 
+            if($reviewsFound[$x]['AssessorSignedOn'])   $reviewsFound[$x]['Status'] = $statusList[3]; 
+            if($reviewsFound[$x]['LearnerSignedOn'])    $reviewsFound[$x]['Status'] = $statusList[4]; 
+
+            //Set array data
+            $arrayData[] = array_values($reviewsFound[$x]);
+
+        endfor;
+
         //Send or save report
         if ($reviews):
             $counter = count($reviews);
 
-            try {
-                $header = array_keys($reviewsFound[0]);
+            //Write to spreadsheet
+            $spreadsheet = new Spreadsheet();
+            $spreadsheet->getActiveSheet()
+                ->fromArray(
+                    $arrayData,  // The data to set
+                    NULL,        // Array values with this value will not be set
+                    'A1'         // Top left coordinate of the worksheet range where
+                                //  we want to set these values (default is A1)
+                );
+            
+            $writer = new Xlsx($spreadsheet);
+            $writer->save(FCPATH.'output/Review-' . $firstDay->format('M-yy') . '.xlsx');
+
+            // try {
+            //     $header = array_keys($reviewsFound[0]);
     
-                $writer = Writer::createFromPath(FCPATH.'output/file.csv', 'w+');
-                //insert the header
-                $writer->insertOne($header);
-                //insert records
-                $writer->insertAll($reviewsFound);
-            } catch (CannotInsertRecord $e) {
-                $e->getRecords(); //returns [1, 2, 3]
-            }
+            //     $writer = Writer::createFromPath(FCPATH.'output/reviews.csv', 'w+');
+            //     //insert the header
+            //     $writer->insertOne($header);
+            //     //insert records
+            //     $writer->insertAll($reviewsFound);
+            // } catch (CannotInsertRecord $e) {
+            //     $e->getRecords(); 
+            // }
 
         else:
             $counter = 0;
@@ -122,6 +155,7 @@ class Send_reviews extends REST_Controller {
 
         $return = array('status' => true, 'message' => "Job completed. Reviews found: $counter");
         $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+
     }    
 
 }
