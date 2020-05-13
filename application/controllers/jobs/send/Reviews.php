@@ -135,7 +135,7 @@ class Reviews extends REST_Controller {
                 );
             
             $writer = new Xlsx($spreadsheet);
-            $writer->save('/webroot/storage/Review-' . $firstDay->format('M-yy') . '.xlsx');
+            $writer->save('/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx');
 
             // try {
             //     $header = array_keys($reviewsFound[0]);
