@@ -15,7 +15,7 @@ class Env
             $dotenv = Dotenv\Dotenv::createImmutable(APPPATH . 'environment');
             $dotenv->load();
         else:
-            $dotenv = Dotenv\Dotenv::createImmutable('/webroot');
+            $dotenv = Dotenv\Dotenv::createImmutable('/current');
             $dotenv->load();
         endif;
 
