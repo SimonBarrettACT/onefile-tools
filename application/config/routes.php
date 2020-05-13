@@ -67,7 +67,7 @@ $route['api/(:any)/classroom/search/(:num)/(:num)'] = 'api/classroom/search/$2/$
 
 $route['api/(:any)/customer']                       = 'api/customer';
 
-$route['api/(:any)/debug']                          = 'api/debug';
+$route['api/(:any)/debug/paths']                        = 'api/debug/paths';
 
 $route['api/(:any)/organisation/(:num)']                = 'api/organisation/id/$2';
 $route['api/(:any)/organisation/search']                = 'api/organisation/search';
