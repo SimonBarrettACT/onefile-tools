@@ -10,8 +10,6 @@ class Welcome extends CI_Controller {
 
     public function index()
     {
-        echo $this->classroom->getClassrooms();
-
-        // echo "This is a utility for OneFile.".PHP_EOL;
+        echo "<p>This is a utility for OneFile.</p>";
     }
 }
