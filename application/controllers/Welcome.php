@@ -13,6 +13,6 @@ class Welcome extends CI_Controller {
         $root = env('APPLICATION_ROOT');
 
         echo "<p>This is a utility for OneFile.</p>";
-        echo "<p>$root</p>";
+  
     }
 }
