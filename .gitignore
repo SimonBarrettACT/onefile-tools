@@ -1,6 +1,6 @@
 .DS_Store
 
-*.paw
+.env
 
 public/output/*.xlsx
 application/environment/.env

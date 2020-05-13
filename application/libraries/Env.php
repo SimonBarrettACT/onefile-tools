@@ -12,10 +12,10 @@ class Env
 
         //Check for local .env first
         if(file_exists(APPPATH . 'environment/.env')):
-            $dotenv = Dotenv\Dotenv::create(APPPATH . 'environment');
+            $dotenv = Dotenv\Dotenv::createImmutable(APPPATH . 'environment');
             $dotenv->load();
         else:
-            $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+            $dotenv = Dotenv\Dotenv::createImmutable('/webroot');
             $dotenv->load();
         endif;
 
