@@ -41,7 +41,7 @@ class Debug extends REST_Controller {
     public function index_get()
     {
 
-        $return = directory_map('/webroot/');
+        $return = directory_map('/webroot/storage/');
 
         if (!empty($return))
         {
