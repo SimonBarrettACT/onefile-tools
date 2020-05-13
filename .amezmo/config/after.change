@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Make sure we fail our deployment if this hook fails.
+set -e;
+
+cp .env /application/environment

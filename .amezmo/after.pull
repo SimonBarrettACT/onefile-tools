@@ -23,3 +23,6 @@ ln \
     --force \
     --no-dereference \
     /webroot/storage/public "${APPLICATION_ROOT}/public/storage";
+
+#Copy .env file to the application/environment folder
+cp .env /application/environment
