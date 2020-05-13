@@ -9,14 +9,16 @@ class Env
 {
     public function __construct()
     {
-        //Amezmo deployment
-        if(file_exists('/webroot/.env')):
-            copy('/webroot/.env', APPPATH . 'environment/.env');
-        endif;
 
         //Only initialize this library if .env exists
         if(file_exists(APPPATH . 'environment/.env')):
             $dotenv = Dotenv\Dotenv::create(APPPATH . 'environment');
+            $dotenv->load();
+        endif;
+
+        //Only initialize this library if .env exists
+        if(file_exists('/webroot/.env')):
+            $dotenv = Dotenv\Dotenv::create('/webroot');
             $dotenv->load();
         endif;
 
