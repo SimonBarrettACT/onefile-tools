@@ -25,7 +25,11 @@ class Classroom extends REST_Controller {
 
         $apiKey = $this->uri->segment(2);
 
+<<<<<<< HEAD
         echo env('MY_API_KEY');
+=======
+        echo $apiKey;
+>>>>>>> fba2f4e73320cde4c2b16cbd5017bbaed494ff54
         die();
 
         if (env('MY_API_KEY') !== $apiKey ):
