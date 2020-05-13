@@ -134,6 +134,11 @@ class Reviews extends REST_Controller {
                                 //  we want to set these values (default is A1)
                 );
             
+
+            if (!is_dir('/webroot/storage/reviews/')):
+                mkdir('/webroot/storage/reviews/', 0777, TRUE);  
+            endif;
+
             $writer = new Xlsx($spreadsheet);
             $writer->save('/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx');
 
