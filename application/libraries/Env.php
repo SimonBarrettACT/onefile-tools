@@ -10,15 +10,12 @@ class Env
     public function __construct()
     {
 
-        //Only initialize this library if .env exists
+        //Check for local .env first
         if(file_exists(APPPATH . 'environment/.env')):
             $dotenv = Dotenv\Dotenv::create(APPPATH . 'environment');
             $dotenv->load();
-        endif;
-
-        //Only initialize this library if .env exists
-        if(file_exists('../.env')):
-            $dotenv = Dotenv\Dotenv::create('../');
+        else:
+            $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
             $dotenv->load();
         endif;
 
