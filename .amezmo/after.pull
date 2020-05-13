@@ -10,6 +10,11 @@ set -e;
 # APPLICATION_ROOT is a default variable provided at hook execution time
 echo "Running this hook from ${APPLICATION_ROOT}";
 
+# Create public storage
+if [ ! -d "/webroot/storage/public" ]; then
+  mkdir /webroot/storage/public;
+fi
+
 # Create our symbolic link to point our public storage directory
 # to our persistent storage directory
 ln \
@@ -17,4 +22,3 @@ ln \
     --force \
     --no-dereference \
     /webroot/storage/public "${APPLICATION_ROOT}/public/storage";
-    
