@@ -65,16 +65,16 @@ class Learners extends REST_Controller {
                 "Role" => 1
             );
 
-            if (isset($record['DOB'])):
-                try {
-                    //DOB must be in d/m/Y format e.g. 23/03/1960
-                    $datetime = DateTime::createFromFormat('d/m/Y', $record['DOB']);
-                    $dob = $datetime->format(DateTime::ATOM);
-                    $createParameters['DOB'] = $dob;
-                } catch (Exception $e) {
-                    //echo 'Caught exception: ',  $e->getMessage(), "\n";
-                }
-            endif;
+            // if (isset($record['DOB'])):
+            //     try {
+            //         //DOB must be in d/m/Y format e.g. 23/03/1960
+            //         $datetime = DateTime::createFromFormat('d/m/Y', $record['DOB']);
+            //         $dob = $datetime->format(DateTime::ATOM);
+            //         $createParameters['DOB'] = $dob;
+            //     } catch (Exception $e) {
+            //         //echo 'Caught exception: ',  $e->getMessage(), "\n";
+            //     }
+            // endif;
 
             try {
                 $response = $this->user->createUser($createParameters);
