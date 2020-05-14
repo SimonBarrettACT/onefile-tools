@@ -144,27 +144,16 @@ class Reviews extends REST_Controller {
             $writer = new Xlsx($spreadsheet);
             $writer->save('/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx');
 
-            $this->email->from('simonbarrett@acttraining.org.uk', 'OneFile Tools');
-            $this->email->to('simonbarrett@icloud.com');
-            // $this->email->cc('another@another-example.com');
-            // $this->email->bcc('them@their-example.com');
+            // $this->email->from('simonbarrett@acttraining.org.uk', 'OneFile Tools');
+            // $this->email->to('simonbarrett@icloud.com');
+            // // $this->email->cc('another@another-example.com');
+            // // $this->email->bcc('them@their-example.com');
 
-            $this->email->subject('Email Test');
-            $this->email->message('Testing the email class.');
+            // $this->email->subject('Email Test');
+            // $this->email->message('Testing the email class.');
 
-            $this->email->send();
+            // $this->email->send();
 
-            // try {
-            //     $header = array_keys($reviewsFound[0]);
-    
-            //     $writer = Writer::createFromPath(FCPATH.'output/reviews.csv', 'w+');
-            //     //insert the header
-            //     $writer->insertOne($header);
-            //     //insert records
-            //     $writer->insertAll($reviewsFound);
-            // } catch (CannotInsertRecord $e) {
-            //     $e->getRecords(); 
-            // }
 
         else:
             $counter = 0;
