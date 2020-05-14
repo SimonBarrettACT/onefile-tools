@@ -45,6 +45,71 @@ class Assessors extends REST_Controller {
     public function index_get()
     {
 
+        // Set file properties
+		$learners = 'assign_assessors.csv';
+        $local_path = APPPATH . '/imports/';
+        
+		// Fetch records 
+        $iteratorRecords = $this->csv->getRecords($local_path . $learners);
+        $records = iterator_to_array($iteratorRecords, true);
+
+        //Get all the learners from OneFile
+        $json = $this->user->getUsers();
+        $onefileLearners = json_decode($json, true);
+
+        //Set counter
+        $counter = 0;
+        $failed = 0;
+
+        $failedRequests = [];
+        $successRequests = [];
+        
+        //Loop through the records
+        foreach($records as $record):
+            //Assessor
+            $assessorID = intval($record['AssessorID']);
+ 
+            $firstName = trim($record['FirstName']);
+            $lastName = trim($record['LastName']);
+
+            //Find the learner from their first and second name
+            $keyFound = search_users($onefileLearners, false, $firstName, 'FirstName', $lastName, 'LastName');
+
+            if ($keyFound) :
+                $learnerID = intval($onefileLearners[$keyFound]['ID']);
+                $firstName = $onefileLearners[$keyFound]['FirstName'];
+                $lastName = $onefileLearners[$keyFound]['LastName'];
+
+//                 Level 1 = Default Assessor
+//                 Level 2 = Unit Assessor
+// ​                Level 3 = Learning Aim Assessor
+                $level = $onefileLearners[$keyFound]['Level']; 
+
+                $currentRequest = array("LearnerID" => $learnerID, "FirstName" => $firstName, "LastName" => $lastName, "Level" => $level);
+
+                //Assign Assessor
+                $assignParameters = array("LearnerID" => $learnerID, "Level" => $level);
+                try {
+                    $response = $this->user->assignUser($assessorID, $assignParameters);
+                    ++$counter;
+                    $successRequests[] = $currentRequest;
+                } catch (Exception $e) {
+                    $failedRequests[] = $currentRequest;
+                    //echo 'Caught exception: ',  $e->getMessage(), "\n";
+                    ++$failed;
+                }
+
+            endif;
+            
+        endforeach;
+        
+        $return = array('status' => true, 'message' => "Job completed with $counter assignments and $failed failures.");
+        $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+    }    
+
+    public function esw_get()
+    {
+
         //Set standard IDs
         $standards['AON']['L1'] = 41240;
         $standards['AON']['L2'] = 41242;
@@ -59,7 +124,7 @@ class Assessors extends REST_Controller {
         $standards['DL']['L3'] = 41288;
 
         // Set file properties
-		$learners = 'assign_assessors.csv';
+		$learners = 'assign_assessors_esw.csv';
         $local_path = APPPATH . '/imports/';
         
 		// Fetch records 
@@ -154,6 +219,5 @@ class Assessors extends REST_Controller {
         
         $return = array('status' => true, 'message' => "Job completed with $counter assignments and $failed failures.");
         $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-    }    
-
+    }  
 }
