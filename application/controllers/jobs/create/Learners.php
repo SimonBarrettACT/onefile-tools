@@ -46,16 +46,18 @@ class Learners extends REST_Controller {
         $rateLimiter = ratelimiter();
 
         // Set file properties
-		$observers = 'create_learners.csv';
+		$learners = 'create_learners.csv';
         $local_path = APPPATH . '/imports/';
         
 		// Fetch records 
-        $iteratorRecords = $this->csv->getRecords($local_path . $observers);
+        $iteratorRecords = $this->csv->getRecords($local_path . $learners);
         $records = iterator_to_array($iteratorRecords, true);
 
         //Set counter
         $counter = 0;
         $failed = 0;
+        $assessor = '';
+        $assessorID = 0;
 
         foreach($records as $record):
 
@@ -63,7 +65,10 @@ class Learners extends REST_Controller {
                 "FirstName" => $record['FirstName'],
                 "LastName" => $record['LastName'],
                 "Email" => $record['Email'],
-                "Role" => 1
+                "Role" => 1,
+                "DefaultAssessorID" => $record['AssessorID'],
+                "ClassroomID" => $record['ClassroomID'],
+                "PlacementID" => $record['PlacementID']
             );
 
             // if (isset($record['DOB'])):
@@ -82,7 +87,8 @@ class Learners extends REST_Controller {
                 ++$counter;
                 $rateLimiter();
             } catch (Exception $e) {
-                //echo 'Caught exception: ',  $e->getMessage(), "\n";
+                // echo 'Caught exception: ',  $e->getMessage(), "\n";
+                // die();
                 ++$failed;
             }
 
