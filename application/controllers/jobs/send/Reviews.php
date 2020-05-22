@@ -189,15 +189,15 @@ class Reviews extends REST_Controller {
                 $this->mail->Subject = 'PHPMailer GMail SMTP test';
 
                 // Content
-                $mail->isHTML(true);                                  // Set email format to HTML
-                $mail->Subject = 'Here is the subject';
-                $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                $this->mail->isHTML(true);                                  // Set email format to HTML
+                $this->mail->Subject = 'Here is the subject';
+                $this->mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+                $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
-                $mail->send();
+                $this->mail->send();
                 echo 'Message has been sent';
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
             }
 
         else:
