@@ -52,6 +52,11 @@ class Reviews extends REST_Controller {
         // Instantiation and passing `true` enables exceptions
         $this->mail = new PHPMailer(true);
 
+        //Check output folder exists
+        if (!is_dir('/webroot/storage/reviews/')):
+            mkdir('/webroot/storage/reviews/', 0777, TRUE);  
+        endif;
+
     }
     
     public function index_get()
@@ -133,20 +138,24 @@ class Reviews extends REST_Controller {
         if ($reviews):
             $counter = count($reviews);
 
-            //Write to spreadsheet
-            $spreadsheet = new Spreadsheet();
-            $spreadsheet->getActiveSheet()
-                ->fromArray(
-                    $arrayData,  // The data to set
-                    NULL,        // Array values with this value will not be set
-                    'A1'         // Top left coordinate of the worksheet range where
-                                //  we want to set these values (default is A1)
-                );
+            //Load the template
             
 
-            if (!is_dir('/webroot/storage/reviews/')):
-                mkdir('/webroot/storage/reviews/', 0777, TRUE);  
-            endif;
+            // $spreadsheet->getActiveSheet()->setCellValue('E26', 'www.phpexcel.net');
+            // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
+
+            //Write to spreadsheet
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(APPPATH . "/imports/review-audit-template.xlsx");
+
+            $sheet = $spreadsheet->getActiveSheet();
+            
+            $row = 2;
+            foreach($reviews as $review):
+                $sheet->setCellValue('B'.$row, 'Alex Learner');
+                $sheet->setCellValue('C'.$row, 'Ann Assessor');
+                $sheet->setCellValue('F'.$row, '01/01/2020');
+                ++$row;
+            endforeach;
 
             //Set filename
             $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
@@ -214,6 +223,7 @@ class Reviews extends REST_Controller {
         else:
             $counter = 0;
         endif;
+
 
         $return = array('status' => true, 'message' => "Job completed. Reviews found: $counter", "email" => $emailStatus);
         $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
