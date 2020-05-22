@@ -159,7 +159,11 @@ class Reviews extends REST_Controller {
                 // SMTP::DEBUG_OFF = off (for production use)
                 // SMTP::DEBUG_CLIENT = client messages
                 // SMTP::DEBUG_SERVER = client and server messages
-                $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;
+                if(env('SMTP_DEBUG')):
+                    $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;
+                else:
+                    $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
+                endif;
 
                 //Set the hostname of the mail server
                 $this->mail->Host = 'smtp.gmail.com';
@@ -184,9 +188,6 @@ class Reviews extends REST_Controller {
 
                 //Set who the message is to be sent to
                 $this->mail->addAddress('simonbarrett@me.com', 'Simon Barrett');
-
-                //Set the subject line
-                $this->mail->Subject = 'PHPMailer GMail SMTP test';
 
                 // Content
                 $this->mail->isHTML(true);                                  // Set email format to HTML
