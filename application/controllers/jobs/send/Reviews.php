@@ -46,8 +46,6 @@ class Reviews extends REST_Controller {
             ], REST_Controller::HTTP_UNAUTHORIZED); // NOT_FOUND (404) being the HTTP response code
         endif;
 
-        $this->load->library('ftps');
-
         $this->load->model('user_model', 'user');
         $this->load->model('review_model', 'review');
 
