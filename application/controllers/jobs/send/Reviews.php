@@ -138,16 +138,11 @@ class Reviews extends REST_Controller {
         if ($reviews):
             $counter = count($reviews);
 
-            //Load the template
-            echo APPPATH . "/imports/review-audit-template.xlsx";
-
-            die();
-
             // $spreadsheet->getActiveSheet()->setCellValue('E26', 'www.phpexcel.net');
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
             //Write to spreadsheet
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(APPPATH . "/imports/review-audit-template.xlsx");
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(APPPATH . "imports/review-audit-template.xlsx");
 
             $sheet = $spreadsheet->getActiveSheet();
             
