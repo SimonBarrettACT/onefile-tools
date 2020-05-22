@@ -144,12 +144,12 @@ class Reviews extends REST_Controller {
             // $spreadsheet->getActiveSheet()->setCellValue('E26', 'www.phpexcel.net');
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
-            echo "Here";
-            die();
-            
             //Write to spreadsheet
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(APPPATH . "/imports/review-audit-template.xlsx");
 
+            echo "Here";
+            die();
+            
             $sheet = $spreadsheet->getActiveSheet();
             
             $row = 2;
