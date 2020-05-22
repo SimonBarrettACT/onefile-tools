@@ -148,8 +148,11 @@ class Reviews extends REST_Controller {
                 mkdir('/webroot/storage/reviews/', 0777, TRUE);  
             endif;
 
+            //Set filename
+            $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
+
             $writer = new Xlsx($spreadsheet);
-            $writer->save('/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx');
+            $writer->save($excelFile);
 
             try {
                 //Tell PHPMailer to use SMTP
@@ -189,13 +192,17 @@ class Reviews extends REST_Controller {
                 //Set who the message is to be sent to
                 $this->mail->addAddress('simonbarrett@me.com', 'Simon Barrett');
 
+                // Attachments
+                $this->mail->addAttachment($excelFile);         // Add attachments
+
                 // Content
                 $this->mail->isHTML(true);                                  // Set email format to HTML
-                $this->mail->Subject = 'Here is the subject';
-                $this->mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-                $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                $this->mail->Subject = 'Latest Digital Review Report';
+                $this->mail->Body    = 'Please find the latest report attached.';
+                $this->mail->AltBody = 'Please find the latest report attached.';
 
                 $this->mail->send();
+                
                 if(env('SMTP_DEBUG')) echo 'Message has been sent';
 
             } catch (Exception $e) {
