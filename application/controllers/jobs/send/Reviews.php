@@ -53,9 +53,9 @@ class Reviews extends REST_Controller {
         $this->mail = new PHPMailer(true);
 
         //Check output folder exists
-        if (!is_dir('/webroot/storage/reviews/')):
-            mkdir('/webroot/storage/reviews/', 0777, TRUE);  
-        endif;
+        // if (!is_dir('/webroot/storage/reviews/')):
+        //     mkdir('/webroot/storage/reviews/', 0777, TRUE);  
+        // endif;
 
     }
     
@@ -156,6 +156,9 @@ class Reviews extends REST_Controller {
                 $sheet->setCellValue('F'.$row, '01/01/2020');
                 ++$row;
             endforeach;
+
+            echo "Here";
+            die();
 
             //Set filename
             $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
