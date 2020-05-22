@@ -180,7 +180,7 @@ class Reviews extends REST_Controller {
                 $this->mail->Password = env('SMTP_PASSWORD');
 
                 //Set who the message is to be sent from
-                $this->mail->setFrom('simonbarrett@acttraining,org.uk', 'Simon Barrett');
+                $this->mail->setFrom('simonbarrett@acttraining.org.uk', 'Simon Barrett');
 
                 //Set who the message is to be sent to
                 $this->mail->addAddress('simonbarrett@me.com', 'Simon Barrett');
