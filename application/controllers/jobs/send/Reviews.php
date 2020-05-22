@@ -144,6 +144,9 @@ class Reviews extends REST_Controller {
             // $spreadsheet->getActiveSheet()->setCellValue('E26', 'www.phpexcel.net');
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
+            echo "Here";
+            die();
+            
             //Write to spreadsheet
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(APPPATH . "/imports/review-audit-template.xlsx");
 
@@ -156,9 +159,6 @@ class Reviews extends REST_Controller {
                 $sheet->setCellValue('F'.$row, '01/01/2020');
                 ++$row;
             endforeach;
-
-            echo "Here";
-            die();
 
             //Set filename
             $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
