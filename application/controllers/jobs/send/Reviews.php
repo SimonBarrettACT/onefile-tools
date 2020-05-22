@@ -202,18 +202,20 @@ class Reviews extends REST_Controller {
                 $this->mail->AltBody = 'Please find the latest report attached.';
 
                 $this->mail->send();
-                
-                if(env('SMTP_DEBUG')) echo 'Message has been sent';
+
+                if(env('SMTP_DEBUG')) echo 'Email has been sent';
+                $emailStatus = 'Email has been sent';
 
             } catch (Exception $e) {
-                if(env('SMTP_DEBUG')) echo "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+                if(env('SMTP_DEBUG')) echo "Email could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+                $emailStatus = "Email could not be sent.";
             }
 
         else:
             $counter = 0;
         endif;
 
-        $return = array('status' => true, 'message' => "Job completed. Reviews found: $counter");
+        $return = array('status' => true, 'message' => "Job completed. Reviews found: $counter", "email" => $emailStatus);
         $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
 
     }    
