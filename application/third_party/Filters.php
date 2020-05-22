@@ -1,5 +1,81 @@
 <?php
 
+class MyIterator_Filter_Assessor_By_Name extends FilterIterator {
+
+    private $assessorFilter;
+
+    public function __construct(Iterator $iterator , $filter )
+    {
+        parent::__construct($iterator);
+        $this->assessorFilter = $filter;
+    }
+
+    public function accept() {
+        $record = $this->getInnerIterator()->current();
+    
+        //Check user.csv
+        if (array_key_exists('DefaultAssessor', $record)) {
+            return $record['DefaultAssessor'] == $this->assessorFilter;
+        }
+
+        //Check assessment.csv or review.csv
+        if (array_key_exists('AssessorName', $record)) {
+            return $record['AssessorName'] == $this->assessorFilter;
+        }
+
+
+        return false;
+    }
+    
+    }
+
+class MyIterator_Filter_Date extends FilterIterator {
+
+    private $dateFilter;
+
+    public function __construct(Iterator $iterator , $filter )
+    {
+        parent::__construct($iterator);
+        $this->dateFilter = $filter;
+    }
+
+    public function accept() {
+        $record = $this->getInnerIterator()->current();
+    
+        //Check review.csv
+        if (array_key_exists('DateReview', $record)) {
+            $startDate = DateTime::createFromFormat('Y-m-d H:i:s', $record['DateReview']);
+            return $startDate >= $this->dateFilter;
+        }
+
+        //Check assessment.csv
+        if (array_key_exists('DateLearnerSign', $record)) {
+            $startDate = DateTime::createFromFormat('Y-m-d H:i:s', $record['DateLearnerSign']);
+            return $startDate >= $this->dateFilter;
+        }
+
+        return false;
+    }
+    
+    }
+
+class MyIterator_Filter_Assessors extends FilterIterator {
+
+    public function accept() {
+        $value = $this->current();
+    
+        //Check role
+        if (array_key_exists('Group', $value)
+        && 
+        $value['Group'] != "Assessor") {
+           return false;
+        }
+    
+        return true;
+    }
+    
+    }
+
 class MyIterator_Filter_Archived extends FilterIterator {
 
 public function accept() {

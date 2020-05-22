@@ -8,6 +8,10 @@ use League\Csv\Writer;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 include APPPATH . 'third_party/Filters.php';
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
@@ -24,6 +28,8 @@ require APPPATH . '/libraries/REST_Controller.php';
  */
 
 class Reviews extends REST_Controller {
+
+    private $mail;
 
     function __construct()
     {
@@ -43,7 +49,8 @@ class Reviews extends REST_Controller {
         $this->load->model('user_model', 'user');
         $this->load->model('review_model', 'review');
 
-        $this->load->library('email');
+        // Instantiation and passing `true` enables exceptions
+        $this->mail = new PHPMailer(true);
 
     }
     
@@ -144,16 +151,54 @@ class Reviews extends REST_Controller {
             $writer = new Xlsx($spreadsheet);
             $writer->save('/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx');
 
-            // $this->email->from('simonbarrett@acttraining.org.uk', 'OneFile Tools');
-            // $this->email->to('simonbarrett@icloud.com');
-            // // $this->email->cc('another@another-example.com');
-            // // $this->email->bcc('them@their-example.com');
+            try {
+                //Tell PHPMailer to use SMTP
+                $this->mail->isSMTP();
 
-            // $this->email->subject('Email Test');
-            // $this->email->message('Testing the email class.');
+                //Enable SMTP debugging
+                // SMTP::DEBUG_OFF = off (for production use)
+                // SMTP::DEBUG_CLIENT = client messages
+                // SMTP::DEBUG_SERVER = client and server messages
+                $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;
 
-            // $this->email->send();
+                //Set the hostname of the mail server
+                $this->mail->Host = 'smtp.gmail.com';
 
+                //Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
+                $this->mail->Port = 587;
+
+                //Set the encryption mechanism to use - STARTTLS or SMTPS
+                $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+                //Whether to use SMTP authentication
+                $this->mail->SMTPAuth = true;
+
+                //Username to use for SMTP authentication - use full email address for gmail
+                $this->mail->Username = env(SMTP_USERNAME);
+
+                //Password to use for SMTP authentication
+                $this->mail->Password = env(SMTP_PASSWORD);
+
+                //Set who the message is to be sent from
+                $this->mail->setFrom('simonbarrett@acttraining,org.uk', 'Simon Barrett');
+
+                //Set who the message is to be sent to
+                $this->mail->addAddress('simonbarrett@me.com', 'Simon Barrett');
+
+                //Set the subject line
+                $this->mail->Subject = 'PHPMailer GMail SMTP test';
+
+                // Content
+                $mail->isHTML(true);                                  // Set email format to HTML
+                $mail->Subject = 'Here is the subject';
+                $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+                $mail->send();
+                echo 'Message has been sent';
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
 
         else:
             $counter = 0;

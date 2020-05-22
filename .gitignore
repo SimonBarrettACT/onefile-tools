@@ -2,6 +2,8 @@
 
 .env
 
+application/config/*_local.php
+
 public/output/*.xlsx
 application/environment/.env
 
