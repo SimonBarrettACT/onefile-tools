@@ -7,6 +7,7 @@ use League\Csv\Writer;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -142,7 +143,8 @@ class Reviews extends REST_Controller {
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
             //Write to spreadsheet
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(APPPATH . "imports/review-audit-template.xlsx");
+            $inputFileName = APPPATH . "imports/review-audit-template.xlsx";
+            $spreadsheet = IOFactory::load($inputFileName);
 
             $sheet = $spreadsheet->getActiveSheet();
             
