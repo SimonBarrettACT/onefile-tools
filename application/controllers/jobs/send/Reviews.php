@@ -174,10 +174,10 @@ class Reviews extends REST_Controller {
                 $this->mail->SMTPAuth = true;
 
                 //Username to use for SMTP authentication - use full email address for gmail
-                $this->mail->Username = env(SMTP_USERNAME);
+                $this->mail->Username = env('SMTP_USERNAME');
 
                 //Password to use for SMTP authentication
-                $this->mail->Password = env(SMTP_PASSWORD);
+                $this->mail->Password = env('SMTP_PASSWORD');
 
                 //Set who the message is to be sent from
                 $this->mail->setFrom('simonbarrett@acttraining,org.uk', 'Simon Barrett');
