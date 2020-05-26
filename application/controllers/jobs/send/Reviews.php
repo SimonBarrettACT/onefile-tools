@@ -108,23 +108,27 @@ class Reviews extends REST_Controller {
                 $fullReview = json_decode($this->review->getReview($review['ID']), true);
                 $reviewID = $fullReview['ID'];
                 $userID = $fullReview['LearnerID'];
-                $assessorID = $fullReview['AssessorID'];
 
-                $learner = json_decode($this->user->getUser($userID), true);
-                $rateLimiter();
+                if(isset($fullReview['AssessorID'])):
+                    $assessorID = $fullReview['AssessorID'];
 
-                $assessor = json_decode($this->user->getUser($assessorID), true);
-                $rateLimiter();
+                    $learner = json_decode($this->user->getUser($userID), true);
+                    $rateLimiter();
 
-                //Scheduled date
-                $scheduleDate = date('d/m/Y', strtotime($fullReview['ScheduledFor']));
+                    $assessor = json_decode($this->user->getUser($assessorID), true);
+                    $rateLimiter();
 
-                $sheet->setCellValue('A'.$row, $reviewID);
-                $sheet->getCell('A'.$row)->getHyperlink()->setUrl("https://live.onefile.co.uk/review/review_form.aspx?UserID=$userID&ReviewID=$reviewID");                
-                $sheet->setCellValue('C'.$row, $learner['FirstName'] . ' ' . $learner['LastName'] );
-                $sheet->setCellValue('D'.$row, $assessor['FirstName'] . ' ' . $assessor['LastName']);
-                $sheet->setCellValue('G'.$row, $scheduleDate);
-                ++$row;
+                    //Scheduled date
+                    $scheduleDate = date('d/m/Y', strtotime($fullReview['ScheduledFor']));
+
+                    $sheet->setCellValue('A'.$row, $reviewID);
+                    $sheet->getCell('A'.$row)->getHyperlink()->setUrl("https://live.onefile.co.uk/review/review_form.aspx?UserID=$userID&ReviewID=$reviewID");                
+                    $sheet->setCellValue('C'.$row, $learner['FirstName'] . ' ' . $learner['LastName'] );
+                    $sheet->setCellValue('D'.$row, $assessor['FirstName'] . ' ' . $assessor['LastName']);
+                    $sheet->setCellValue('G'.$row, $scheduleDate);
+                    ++$row;
+                endif;
+                
             endforeach;
         
 
