@@ -143,20 +143,9 @@ class Reviews extends REST_Controller {
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
             //Write to spreadsheet
-            $inputFileName = APPPATH . "imports/review-audit-template.xlsx";
+            $inputFileName = FCPATH . "templates/review-audit-template.xlsx";
 
-            /** Create a new Xls Reader  **/
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xml();
-            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Ods();
-            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Slk();
-            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Gnumeric();
-            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-            /** Load $inputFileName to a Spreadsheet Object  **/
-            $spreadsheet = $reader->load($inputFileName);
-
-            //$spreadsheet = IOFactory::load($inputFileName);
+            $spreadsheet = IOFactory::load($inputFileName);
 
             $sheet = $spreadsheet->getActiveSheet();
             
