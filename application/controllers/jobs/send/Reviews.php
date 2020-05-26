@@ -93,10 +93,6 @@ class Reviews extends REST_Controller {
         $reviews = json_decode($json, true);
         $rateLimiter();
 
-        echo $json;
-        die();
-        
-
         //Send or save report
         if ($reviews):
             $counter = count($reviews);
@@ -108,13 +104,26 @@ class Reviews extends REST_Controller {
             
             $row = 2;
             foreach($reviews as $review):
-                $reviewID = 
+                $rateLimiter();
+                $fullReview = json_decode($this->review->getReview($review['ID']), true);
+                $reviewID = $fullReview['ID'];
+                $userID = $fullReview['LearnerID'];
+                $assessorID = $fullReview['AssessorID'];
 
-                $sheet->setCellValue('A'.$row, $row + 1000);
-                $sheet->getCell('A'.$row)->getHyperlink()->setUrl("https://live.onefile.co.uk/review/review_form.aspx?UserID=954484&ReviewID=3485483");                
-                $sheet->setCellValue('C'.$row, 'Alex Learner');
-                $sheet->setCellValue('D'.$row, 'Ann Assessor');
-                $sheet->setCellValue('G'.$row, '01/01/2020');
+                $learner = json_decode($this->user->getUser($userID), true);
+                $rateLimiter();
+
+                $assessor = json_decode($this->user->getUser($assessorID), true);
+                $rateLimiter();
+
+                //Scheduled date
+                $scheduleDate = date('d/m/Y', strtotime($fullReview['ScheduledFor']));
+
+                $sheet->setCellValue('A'.$row, $reviewID);
+                $sheet->getCell('A'.$row)->getHyperlink()->setUrl("https://live.onefile.co.uk/review/review_form.aspx?UserID=$userID&ReviewID=$reviewID");                
+                $sheet->setCellValue('C'.$row, $learner['FirstName'] . ' ' . $learner['LastName'] );
+                $sheet->setCellValue('D'.$row, $assessor['FirstName'] . ' ' . $assessor['LastName']);
+                $sheet->setCellValue('G'.$row, $scheduleDate);
                 ++$row;
             endforeach;
         
