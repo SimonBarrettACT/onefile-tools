@@ -143,7 +143,7 @@ class Reviews extends REST_Controller {
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
             //Write to spreadsheet
-            $inputFileName = FCPATH . "templates/review-audit-template-2.xlsx";
+            $inputFileName = FCPATH . "templates/test-template.xlsx";
             $spreadsheet = IOFactory::load($inputFileName);
             $sheet = $spreadsheet->getActiveSheet();
             
