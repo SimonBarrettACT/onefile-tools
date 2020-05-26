@@ -91,56 +91,15 @@ class Reviews extends REST_Controller {
         //Get reviews
         $json = $this->review->getReviews($parameters);
         $reviews = json_decode($json, true);
-        $reviewsFound = [];
         $rateLimiter();
 
-        $statusList = array('', 'Not Started','Started but not signed', 'Signed by Assessor', 'Signed by Assessor and Learner');
-
-        //Loop through the reviews and add to CSV
-        if($reviews):
-            foreach($reviews as $review):
-                $json = $this->review->getReview($review['ID']);
-                $found = json_decode($json, true);
-
-                //Process to add missing fields
-                $keys = array('ID','ScheduledFor','LearnerID','AssessorID','EmployerID','Status','CreatedOn','StartedOn','AssessorSignedOn','LearnerSignedOn','EmployerSignedOn','EndTime','VisitID','Progress');
-                $values = [];
-                foreach($keys as $key):
-                    if(!isset($found[$key])):
-                        $values[] = '';
-                    else:
-                        $values[] = $found[$key];
-                    endif;
-                endforeach;
-                $found = array_combine($keys, $values);
-
-                if($found) $reviewsFound = array_merge($reviewsFound, [$found]);
-                $rateLimiter();
-            endforeach;
-        endif;
-
-        $arrayData = [];
-        $arrayData[] = array_keys($reviewsFound[0]);
-
-        for ($x = 0; $x < count($reviewsFound); $x++):
-            //Set the status text
-            $reviewsFound[$x]['Status'] = '';
-            if($reviewsFound[$x]['ScheduledFor'])       $reviewsFound[$x]['Status'] = $statusList[1];  
-            if($reviewsFound[$x]['StartedOn'])          $reviewsFound[$x]['Status'] = $statusList[2]; 
-            if($reviewsFound[$x]['AssessorSignedOn'])   $reviewsFound[$x]['Status'] = $statusList[3]; 
-            if($reviewsFound[$x]['LearnerSignedOn'])    $reviewsFound[$x]['Status'] = $statusList[4]; 
-
-            //Set array data
-            $arrayData[] = array_values($reviewsFound[$x]);
-
-        endfor;
+        echo $json;
+        die();
+        
 
         //Send or save report
         if ($reviews):
             $counter = count($reviews);
-
-            // $spreadsheet->getActiveSheet()->setCellValue('E26', 'www.phpexcel.net');
-            // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
             //Write to spreadsheet
             $inputFileName = FCPATH . "templates/review-audit-template.xlsx";
@@ -149,8 +108,10 @@ class Reviews extends REST_Controller {
             
             $row = 2;
             foreach($reviews as $review):
+                $reviewID = 
+
                 $sheet->setCellValue('A'.$row, $row + 1000);
-                $sheet->getCell('A'.$row)->getHyperlink()->setUrl('https://www.example.com');                
+                $sheet->getCell('A'.$row)->getHyperlink()->setUrl("https://live.onefile.co.uk/review/review_form.aspx?UserID=954484&ReviewID=3485483");                
                 $sheet->setCellValue('C'.$row, 'Alex Learner');
                 $sheet->setCellValue('D'.$row, 'Ann Assessor');
                 $sheet->setCellValue('G'.$row, '01/01/2020');
