@@ -16,7 +16,7 @@ use PHPMailer\PHPMailer\Exception;
 include APPPATH . 'third_party/Filters.php';
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
-require APPPATH . '/libraries/REST_Controller.php';
+require APPPATH . 'libraries/REST_Controller.php';
 
 /**
  *
@@ -144,6 +144,10 @@ class Reviews extends REST_Controller {
 
             //Write to spreadsheet
             $inputFileName = APPPATH . "imports/review-audit-template.xlsx";
+
+            echo $inputFileName ;
+            die();
+            
             $spreadsheet = IOFactory::load($inputFileName);
 
             $sheet = $spreadsheet->getActiveSheet();
