@@ -143,15 +143,17 @@ class Reviews extends REST_Controller {
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
             //Write to spreadsheet
-            $inputFileName = FCPATH . "templates/test-template.xlsx";
+            $inputFileName = FCPATH . "templates/review-audit-template.xlsx";
             $spreadsheet = IOFactory::load($inputFileName);
             $sheet = $spreadsheet->getActiveSheet();
             
             $row = 2;
             foreach($reviews as $review):
-                $sheet->setCellValue('B'.$row, 'Alex Learner');
-                $sheet->setCellValue('C'.$row, 'Ann Assessor');
-                $sheet->setCellValue('F'.$row, '01/01/2020');
+                $sheet->setCellValue('A'.$row, $row + 1000);
+                $sheet->getCell('A'.$row)->getHyperlink()->setUrl('https://www.example.com');                
+                $sheet->setCellValue('C'.$row, 'Alex Learner');
+                $sheet->setCellValue('D'.$row, 'Ann Assessor');
+                $sheet->setCellValue('G'.$row, '01/01/2020');
                 ++$row;
             endforeach;
         
