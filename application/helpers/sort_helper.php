@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists($a,$b)) {
+if (!function_exists(sort_scheduled_date)) {
     
   function sort_scheduled_date($a,$b)
     {
