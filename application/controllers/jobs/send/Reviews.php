@@ -144,9 +144,7 @@ class Reviews extends REST_Controller {
 
             //Write to spreadsheet
             $inputFileName = FCPATH . "templates/review-audit-template.xlsx";
-
             $spreadsheet = IOFactory::load($inputFileName);
-
             $sheet = $spreadsheet->getActiveSheet();
             
             $row = 2;
