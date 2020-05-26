@@ -62,6 +62,7 @@ class Reviews extends REST_Controller {
     
     public function index_get()
     {
+
         //Start rate limiter
         $rateLimiter = ratelimiter();
 
@@ -96,6 +97,9 @@ class Reviews extends REST_Controller {
         //Send or save report
         if ($reviews):
             $counter = count($reviews);
+
+            //Sort reviews
+            usort($reviews, "sort_scheduled_date");
 
             //Write to spreadsheet
             $inputFileName = FCPATH . "templates/review-audit-template.xlsx";
@@ -177,6 +181,7 @@ class Reviews extends REST_Controller {
 
             endforeach;
         
+            $sheet->setSelectedCell('A2');
 
             //Set filename
             $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
