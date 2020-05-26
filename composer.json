@@ -3,14 +3,27 @@
     "description": "A simple utility to work with OneFile",
     "require": {
         "php": ">=5.3.2",
+        "ext-ctype": "*",
+        "ext-dom": "*",
+        "ext-gd": "*",
+        "ext-iconv": "*",
+        "ext-fileinfo": "*",
+        "ext-libxml": "*",
+        "ext-mbstring": "*",
+        "ext-SimpleXML": "*",
+        "ext-xml": "*",
+        "ext-xmlreader": "*",
+        "ext-xmlwriter": "*",
+        "ext-zip": "*",
+        "ext-zlib": "*",
         "codeigniter/framework": "3.1.*",
         "guzzlehttp/guzzle": "~6.0",
         "vlucas/phpdotenv": "^4.0",
         "league/csv": "^9.4",
-        "phpoffice/phpspreadsheet": "^1.12",
         "delight-im/str": "^2.4",
         "phpmailer/phpmailer": "^6.1",
-        "league/oauth2-google": "^3.0"
+        "league/oauth2-google": "^3.0",
+        "phpoffice/phpspreadsheet": "^1.12"
     },
     "require-dev": {
         "mikey179/vfsstream": "1.1.*"
