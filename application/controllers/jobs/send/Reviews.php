@@ -145,10 +145,18 @@ class Reviews extends REST_Controller {
             //Write to spreadsheet
             $inputFileName = APPPATH . "imports/review-audit-template.xlsx";
 
-            echo $inputFileName ;
-            die();
-            
-            $spreadsheet = IOFactory::load($inputFileName);
+            /** Create a new Xls Reader  **/
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xml();
+            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Ods();
+            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Slk();
+            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Gnumeric();
+            //    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+            /** Load $inputFileName to a Spreadsheet Object  **/
+            $spreadsheet = $reader->load($inputFileName);
+
+            //$spreadsheet = IOFactory::load($inputFileName);
 
             $sheet = $spreadsheet->getActiveSheet();
             
@@ -159,6 +167,7 @@ class Reviews extends REST_Controller {
                 $sheet->setCellValue('F'.$row, '01/01/2020');
                 ++$row;
             endforeach;
+        
 
             //Set filename
             $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
