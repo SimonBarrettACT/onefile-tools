@@ -119,16 +119,60 @@ class Reviews extends REST_Controller {
                     $rateLimiter();
 
                     //Scheduled date
-                    $scheduleDate = date('d/m/Y', strtotime($fullReview['ScheduledFor']));
+                    if(isset($fullReview['ScheduledFor'])):
+                        $scheduledFor = date('d/m/Y', strtotime($fullReview['ScheduledFor']));
+                    else:
+                        $scheduledFor = '';
+                    endif;
+
+                    //Started date
+                    if(isset($fullReview['StartedOn'])):
+                        $startedOn = date('d/m/Y', strtotime($fullReview['StartedOn']));
+                    else:
+                        $startedOn = '';
+                    endif;
+
+                    if(isset($fullReview['AssessorSignedOn'])):
+                        $assessorSigned = date('d/m/Y', strtotime($fullReview['AssessorSignedOn']));
+                    else:
+                        $assessorSigned = '';
+                    endif;
+
+                    if(isset($fullReview['LearnerSignedOn'])):
+                        $learnerSigned = date('d/m/Y', strtotime($fullReview['LearnerSignedOn']));
+                    else:
+                        $learnerSigned = '';
+                    endif;
+
+                    //Check compliance
+                    $compliant = '';
+                    if(isset($fullReview['AssessorSignedOn']) and isset($fullReview['LearnerSignedOn'])):
+                        $start_date = new DateTime($fullReview['AssessorSignedOn']);
+                        $since_start = $start_date->diff(new DateTime($fullReview['LearnerSignedOn']));
+                        $minutes = $since_start->i;
+                        if($minutes > 30):
+                            $compliant = 'No';
+                        else:
+                            $compliant = 'Yes';
+                        endif;
+                    endif;
+                    //Learner not signed
+                    if(isset($fullReview['AssessorSignedOn']) and !isset($fullReview['LearnerSignedOn'])):
+                        $compliant = 'No';
+                    endif;
 
                     $sheet->setCellValue('A'.$row, $reviewID);
                     $sheet->getCell('A'.$row)->getHyperlink()->setUrl("https://live.onefile.co.uk/review/review_form.aspx?UserID=$userID&ReviewID=$reviewID");                
                     $sheet->setCellValue('C'.$row, $learner['FirstName'] . ' ' . $learner['LastName'] );
                     $sheet->setCellValue('D'.$row, $assessor['FirstName'] . ' ' . $assessor['LastName']);
-                    $sheet->setCellValue('G'.$row, $scheduleDate);
+                    $sheet->setCellValue('G'.$row, $scheduledFor);
+                    $sheet->setCellValue('H'.$row, $startedOn);
+                    $sheet->setCellValue('I'.$row, $assessorSigned);
+                    $sheet->setCellValue('J'.$row, $learnerSigned);
+                    $sheet->setCellValue('K'.$row, $compliant);
                     ++$row;
                 endif;
-                
+
             endforeach;
         
 
