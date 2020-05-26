@@ -149,7 +149,9 @@ class Reviews extends REST_Controller {
                     if(isset($fullReview['AssessorSignedOn']) and isset($fullReview['LearnerSignedOn'])):
                         $start_date = new DateTime($fullReview['AssessorSignedOn']);
                         $since_start = $start_date->diff(new DateTime($fullReview['LearnerSignedOn']));
-                        $minutes = $since_start->i;
+                        $minutes = $since_start->days * 24 * 60;
+                        $minutes += $since_start->h * 60;
+                        $minutes += $since_start->i;
                         if($minutes > 30):
                             $compliant = 'No';
                         else:
