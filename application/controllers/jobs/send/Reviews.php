@@ -142,6 +142,8 @@ class Reviews extends REST_Controller {
             // $spreadsheet->getActiveSheet()->setCellValue('E26', 'www.phpexcel.net');
             // $spreadsheet->getActiveSheet()->getCell('E26')->getHyperlink()->setUrl('https://www.example.com');
 
+            log_message('info', 'Starting spreadsheet load.');
+
             //Write to spreadsheet
             $inputFileName = FCPATH . "templates/review-audit-template.xlsx";
             $spreadsheet = IOFactory::load($inputFileName);
