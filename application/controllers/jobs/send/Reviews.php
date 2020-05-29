@@ -113,7 +113,8 @@ class Reviews extends REST_Controller {
                 $reviewID = $fullReview['ID'];
                 $userID = $fullReview['LearnerID'];
 
-                if(isset($fullReview['AssessorID'])):
+                //Onl=y reviews that have an assessor and have been signed by the assessor
+                if(isset($fullReview['AssessorID']) and isset($fullReview['AssessorSignedOn'])):
                     $assessorID = $fullReview['AssessorID'];
 
                     $learner = json_decode($this->user->getUser($userID), true);
@@ -225,7 +226,9 @@ class Reviews extends REST_Controller {
                 $this->mail->setFrom('simonbarrett@acttraining.org.uk', 'Simon Barrett');
 
                 //Set who the message is to be sent to
-                $this->mail->addAddress('simonbarrett@me.com', 'Simon Barrett');
+                $this->mail->addAddress('jfrangoulis@cavc.ac.uk', 'Jacki Frangoulis');
+
+                $mail->addBCC('simonbarrett@acttraining.org.uk', 'Simon Barrett');
 
                 // Attachments
                 $this->mail->addAttachment($excelFile);         // Add attachments
@@ -233,8 +236,8 @@ class Reviews extends REST_Controller {
                 // Content
                 $this->mail->isHTML(true);                                  // Set email format to HTML
                 $this->mail->Subject = 'Latest Digital Review Report';
-                $this->mail->Body    = 'Please find the latest report attached.';
-                $this->mail->AltBody = 'Please find the latest report attached.';
+                $this->mail->Body    = '<p>Please find the latest report attached.</p><p>All the reviews listed are for reviews completed last month.</p><p>Regards<br/>Simon</p>';
+                $this->mail->AltBody = 'Please find the latest report attached. All the reviews listed are for reviews completed last month.';
 
                 $this->mail->send();
 
