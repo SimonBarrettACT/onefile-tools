@@ -223,12 +223,13 @@ class Reviews extends REST_Controller {
                 $this->mail->Password = env('SMTP_PASSWORD');
 
                 //Set who the message is to be sent from
-                $this->mail->setFrom('simonbarrett@acttraining.org.uk', 'Simon Barrett');
+                $this->mail->setFrom(env('MAIL_FROM_EMAIL'), env('MAIL_FROM_NAME'));
 
                 //Set who the message is to be sent to
-                $this->mail->addAddress('jfrangoulis@cavc.ac.uk', 'Jacki Frangoulis');
+                //$this->mail->addAddress('jfrangoulis@cavc.ac.uk', 'Jacki Frangoulis');
+                $this->mail->addAddress(env('MAIL_TO_EMAIL'), env('MAIL_TO_NAME'));
 
-                $mail->addBCC('simonbarrett@acttraining.org.uk', 'Simon Barrett');
+                $mail->addBCC(env('MAIL_BC_EMAIL'), env('MAIL_BC_NAME'));
 
                 // Attachments
                 $this->mail->addAttachment($excelFile);         // Add attachments
@@ -259,4 +260,9 @@ class Reviews extends REST_Controller {
 
     }    
 
+    public function debug_get()
+    {
+        $return = array('status' => true, 'message' => "Version: 1");
+        $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+    }
 }
