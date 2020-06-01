@@ -68,21 +68,13 @@ class Reviews extends REST_Controller {
     public function index_get()
     {
 
-        // $storage  = new FileStorage(__DIR__ . "/api.bucket");
-        // $rate     = new Rate(100, Rate::MINUTE);
-        // $bucket   = new TokenBucket(100, $rate, $storage);
-        // $consumer = new BlockingConsumer($bucket);
-        // $bucket->bootstrap(100);
-
         //Get all the learners from OneFile
         $json = $this->user->getUsers();
         $learners = json_decode($json, true);
-        //$consumer->consume(1);
 
         //Get all the assessors from OneFile
         $json = $this->user->getUsers(5);
         $assessors = json_decode($json, true);
-        //$consumer->consume(1);
 
         //Fetch reviews for the last month
         $firstDay = new \DateTime('first day of last month 00:00:00');
@@ -100,17 +92,14 @@ class Reviews extends REST_Controller {
         //Get reviews
         $json = $this->review->getReviews($parameters);
         $reviews = json_decode($json, true);
-        //$consumer->consume(1);
 
         //Get learners
         $json = $this->user->getUsers();
         $learners = json_decode($json, true);
-        //$consumer->consume(1);
 
         //Get assessors
         $json = $this->user->getUsers(5);
         $assessors = json_decode($json, true);
-        //$consumer->consume(1);
 
         //Send or save report
         if ($reviews):
@@ -125,9 +114,14 @@ class Reviews extends REST_Controller {
             $sheet = $spreadsheet->getActiveSheet();
             
             $row = 2;
+            $reviewCounter = 0;
             foreach($reviews as $review):
-                //$consumer->consume(1);
+                
+                $reviewCounter++;
+
                 $fullReview = json_decode($this->review->getReview($review['ID']), true);
+                if($reviewCounter >= 100) sleep(1);
+
                 $reviewID = $fullReview['ID'];
                 $userID = $fullReview['LearnerID'];
 
@@ -138,7 +132,7 @@ class Reviews extends REST_Controller {
                     //$learner = json_decode($this->user->getUser($userID), true);
                     //$consumer->consume(1);
 
-                    //$learner = search_users($learners, false, 'ID', $userID);
+                    $learner = search_users($learners, false, 'ID', $userID);
 
                     //$assessor = json_decode($this->user->getUser($assessorID), true);
                     //$consumer->consume(1);
