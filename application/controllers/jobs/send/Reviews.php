@@ -64,7 +64,7 @@ class Reviews extends REST_Controller {
     {
 
         //Start rate limiter
-        $rateLimiter = ratelimiter();
+        $rateLimiter = ratelimiter(50,60);
 
         //Get all the learners from OneFile
         $json = $this->user->getUsers();
