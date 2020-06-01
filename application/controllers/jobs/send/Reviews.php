@@ -64,7 +64,7 @@ class Reviews extends REST_Controller {
     {
 
         //Start rate limiter
-        $rateLimiter = ratelimiter();
+        $rateLimiter = ratelimiter(90,60);
 
         //Get all the learners from OneFile
         $json = $this->user->getUsers();
@@ -118,10 +118,12 @@ class Reviews extends REST_Controller {
                     $assessorID = $fullReview['AssessorID'];
 
                     $learner = json_decode($this->user->getUser($userID), true);
-                    $rateLimiter();
+                    //$rateLimiter();
+                    sleep(1);
 
                     $assessor = json_decode($this->user->getUser($assessorID), true);
-                    $rateLimiter();
+                    //$rateLimiter();
+                    sleep(1);
 
                     //Scheduled date
                     if(isset($fullReview['ScheduledFor'])):
