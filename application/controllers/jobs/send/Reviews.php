@@ -2,6 +2,10 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use bandwidthThrottle\tokenBucket\Rate;
+use bandwidthThrottle\tokenBucket\TokenBucket;
+use bandwidthThrottle\tokenBucket\storage\FileStorage;
+
 use GuzzleHttp\Client;
 use League\Csv\Writer;
 
@@ -63,18 +67,24 @@ class Reviews extends REST_Controller {
     public function index_get()
     {
 
+        $storage  = new SingleProcessStorage();
+        $rate     = new Rate(100, Rate::MINUTE);
+        $bucket   = new TokenBucket(100, $rate, $storage);
+        $consumer = new BlockingConsumer(bucket);
+        $bucket->bootstrap(100);
+
         //Start rate limiter
-        $rateLimiter = ratelimiter(90,60);
+        //$rateLimiter = ratelimiter(90,60);
 
         //Get all the learners from OneFile
         $json = $this->user->getUsers();
         $learners = json_decode($json, true);
-        $rateLimiter();
+        $consumer->consume(1);
 
         //Get all the assessors from OneFile
         $json = $this->user->getUsers(5);
         $assessors = json_decode($json, true);
-        $rateLimiter();
+        $consumer->consume(1);
 
         //Fetch reviews for the last month
         $firstDay = new \DateTime('first day of last month 00:00:00');
@@ -92,7 +102,7 @@ class Reviews extends REST_Controller {
         //Get reviews
         $json = $this->review->getReviews($parameters);
         $reviews = json_decode($json, true);
-        $rateLimiter();
+        $consumer->consume(1);
 
         //Send or save report
         if ($reviews):
@@ -117,13 +127,12 @@ class Reviews extends REST_Controller {
                 if(isset($fullReview['AssessorID']) and isset($fullReview['AssessorSignedOn'])):
                     $assessorID = $fullReview['AssessorID'];
 
+                    
                     $learner = json_decode($this->user->getUser($userID), true);
-                    //$rateLimiter();
-                    sleep(1);
+                    $consumer->consume(1);
 
                     $assessor = json_decode($this->user->getUser($assessorID), true);
-                    //$rateLimiter();
-                    sleep(1);
+                    $consumer->consume(1);
 
                     //Scheduled date
                     if(isset($fullReview['ScheduledFor'])):
