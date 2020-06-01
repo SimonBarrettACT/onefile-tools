@@ -2,11 +2,6 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// use bandwidthThrottle\tokenBucket\Rate;
-// use bandwidthThrottle\tokenBucket\TokenBucket;
-// use bandwidthThrottle\tokenBucket\BlockingConsumer;
-// use bandwidthThrottle\tokenBucket\storage\FileStorage;
-
 use GuzzleHttp\Client;
 use League\Csv\Writer;
 
@@ -93,13 +88,6 @@ class Reviews extends REST_Controller {
         $json = $this->review->getReviews($parameters);
         $reviews = json_decode($json, true);
 
-        //Get learners
-        $json = $this->user->getUsers();
-        $learners = json_decode($json, true);
-
-        //Get assessors
-        $json = $this->user->getUsers(5);
-        $assessors = json_decode($json, true);
 
         //Send or save report
         if ($reviews):
@@ -129,15 +117,8 @@ class Reviews extends REST_Controller {
                 if(isset($fullReview['AssessorID']) and isset($fullReview['AssessorSignedOn'])):
                     $assessorID = $fullReview['AssessorID'];
 
-                    //$learner = json_decode($this->user->getUser($userID), true);
-                    //$consumer->consume(1);
-
-                    $learner = search_users($learners, false, 'ID', $userID);
-
-                    //$assessor = json_decode($this->user->getUser($assessorID), true);
-                    //$consumer->consume(1);
-
-                    $assessor = search_users($assessors, false, 'ID', $userID);
+                    $learner = search_users_by_id($learners, $userID);
+                    $assessor = search_users_by_id($assessors, $assessorID);
 
                     //Scheduled date
                     if(isset($fullReview['ScheduledFor'])):
@@ -202,6 +183,9 @@ class Reviews extends REST_Controller {
 
             //Set filename
             $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
+
+            //$excelFile = FCPATH . 'output/Review-' . $firstDay->format('M-yy') . '.xlsx';
+
 
             $writer = new Xlsx($spreadsheet);
             $writer->save($excelFile);

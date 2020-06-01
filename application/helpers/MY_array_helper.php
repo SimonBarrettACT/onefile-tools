@@ -36,3 +36,11 @@
     }
     return $keys;
 }
+
+function search_users_by_id($dataArray, $id) {
+
+    foreach ($dataArray as $data) {
+        if($data['ID'] === $id) return $data;
+    }
+    return [];
+}
