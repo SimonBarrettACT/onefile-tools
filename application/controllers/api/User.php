@@ -58,6 +58,19 @@ class User extends REST_Controller {
 
     }   
 
+    public function search_post($pageNumber=0,$pageSize=50)
+    {
+        $parameters = $this->post();
+        $json = $this->user->getUsers($parameters, $pageNumber, $pageSize);
+
+
+        $return = json_decode($json, true);
+
+        $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+
+    }
+
+
     public function id_get($id)
     {
 

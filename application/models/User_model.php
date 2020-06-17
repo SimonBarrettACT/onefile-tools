@@ -57,16 +57,25 @@ class User_model extends CI_Model {
         
 	}
 	
-	public function getUsers($role=1) {
-		
-		//Set parameters
-		$parameters = [
-			'role' => $role,
-			'organisationID' => $this->organisationID
-		];
+	public function getUsers($newParameters=array('Role' => 1), $pageNumber=0, $pageSize=50) {
 
-		//Request Learner
-		$response = $this->client->request('POST', "User/Search",
+			//Set parameters
+			$basicParameters = [
+				'organisationID' => $this->organisationID
+			];
+
+			$parameters = array_merge($basicParameters, $newParameters);
+
+		try {
+
+		If ($pageNumber > 0) {
+			$url = "User/Search/$pageNumber/$pageSize";
+		} else {
+			$url = "User/Search";
+		}
+
+		//Request classrooms
+		$response = $this->client->request('POST', $url,
 		[
 			'headers' => [
 			'X-TokenID' => strval($this->sessionKey),
@@ -77,8 +86,13 @@ class User_model extends CI_Model {
 
 		//Return Users
 		return $response->getBody();
-        
-	}
+
+
+		} catch (Exception $e) {
+			return null;			
+		}
+				
+	}	
 	
 	public function createUser($newParameters) {
 		//Set parameters
