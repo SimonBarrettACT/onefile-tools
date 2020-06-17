@@ -113,6 +113,9 @@ $route['api/(:any)/unit/search/(:num)']               = 'api/unit/search/$2';
 $route['api/(:any)/unit/search/(:num)/(:num)']        = 'api/unit/search/$2/$3';
 
 $route['api/(:any)/user']                           = 'api/user';
+$route['api/(:any)/user/search']                    = 'api/user/search';
+$route['api/(:any)/user/search/(:num)']             = 'api/user/search/$2';
+$route['api/(:any)/user/search/(:num)/(:num)']      = 'api/user/search/$2/$3';
 $route['api/(:any)/user/(:num)']                    = 'api/user/id/$2';
 $route['api/(:any)/user/(:num)/assign']             = 'api/user/assign/$2';
 $route['api/(:any)/user/(:num)/unitsummary']        = 'api/user/unitsummary/$2';
