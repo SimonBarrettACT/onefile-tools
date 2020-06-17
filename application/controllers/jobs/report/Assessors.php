@@ -129,7 +129,65 @@ class Assessors extends REST_Controller {
 
         endforeach;
 
-        $return = array('status' => true, 'message' => "Job completed.");
+        try {
+            //Tell PHPMailer to use SMTP
+            $this->mail->isSMTP();
+
+            //Enable SMTP debugging
+            // SMTP::DEBUG_OFF = off (for production use)
+            // SMTP::DEBUG_CLIENT = client messages
+            // SMTP::DEBUG_SERVER = client and server messages
+            if(env('SMTP_DEBUG')):
+                $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            else:
+                $this->mail->SMTPDebug = SMTP::DEBUG_OFF;
+            endif;
+
+            //Set the hostname of the mail server
+            $this->mail->Host = 'smtp.gmail.com';
+
+            //Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
+            $this->mail->Port = 587;
+
+            //Set the encryption mechanism to use - STARTTLS or SMTPS
+            $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+            //Whether to use SMTP authentication
+            $this->mail->SMTPAuth = true;
+
+            //Username to use for SMTP authentication - use full email address for gmail
+            $this->mail->Username = env('SMTP_USERNAME');
+
+            //Password to use for SMTP authentication
+            $this->mail->Password = env('SMTP_PASSWORD');
+
+            //Set who the message is to be sent from
+            $this->mail->setFrom(env('MAIL_FROM_EMAIL'), env('MAIL_FROM_NAME'));
+
+            //Set who the message is to be sent to
+            //$this->mail->addAddress('jfrangoulis@cavc.ac.uk', 'Jacki Frangoulis');
+            $this->mail->addAddress(env('MAIL_BC_EMAIL'), env('MAIL_BC_NAME'));
+
+            // Attachments
+            $this->mail->addAttachment($local_path . $filename);         // Add attachments
+
+            // Content
+            $this->mail->isHTML(true);                                  // Set email format to HTML
+            $this->mail->Subject = 'Assessors Report';
+            $this->mail->Body    = '<p>Please find the latest assessor report attached.</p><p>Regards<br/>Simon</p>';
+            $this->mail->AltBody = 'Please find the latest assessor report attached.';
+
+            $this->mail->send();
+
+            if(env('SMTP_DEBUG')) echo 'Email has been sent';
+            $emailStatus = 'Email has been sent';
+
+        } catch (Exception $e) {
+            if(env('SMTP_DEBUG')) echo "Email could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            $emailStatus = "Email could not be sent.";
+        }
+
+        $return = array('status' => true, 'message' => "Job completed. " . $emailStatus);
         $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
 
     }    
