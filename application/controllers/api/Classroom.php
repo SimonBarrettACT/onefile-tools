@@ -44,6 +44,8 @@ class Classroom extends REST_Controller {
         $json = $this->classroom->createClassroom($parameters);
         $return = json_decode($json, true);
 
+        return $return->getBody();
+
         if (is_integer($return))
         {
             $this->set_response([

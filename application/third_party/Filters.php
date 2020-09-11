@@ -28,7 +28,31 @@ class MyIterator_Filter_Assessor_By_Name extends FilterIterator {
     }
     
     }
+   
+    class MyIterator_Filter_Learner_By_Name extends FilterIterator {
 
+        private $learnerFilter;
+    
+        public function __construct(Iterator $iterator , $filter )
+        {
+            parent::__construct($iterator);
+            $this->learnerFilter = $filter;
+        }
+    
+        public function accept() {
+            $record = $this->getInnerIterator()->current();
+        
+            //Check assessment.csv or review.csv
+            if (array_key_exists('LearnerName', $record)) {
+                return $record['LearnerName'] == $this->learnerFilter;
+            }
+    
+    
+            return false;
+        }
+        
+        }
+      
 class MyIterator_Filter_Date extends FilterIterator {
 
     private $dateFilter;
@@ -41,7 +65,13 @@ class MyIterator_Filter_Date extends FilterIterator {
 
     public function accept() {
         $record = $this->getInnerIterator()->current();
-    
+        
+        //Check actionplan1.csv
+        if (array_key_exists('DateAssessment', $record)) {
+            $startDate = DateTime::createFromFormat('Y-m-d H:i:s', $record['DateAssessment']);
+            return $startDate >= $this->dateFilter;
+        }
+        
         //Check review.csv
         if (array_key_exists('DateReview', $record)) {
             $startDate = DateTime::createFromFormat('Y-m-d H:i:s', $record['DateReview']);

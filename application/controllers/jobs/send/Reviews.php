@@ -68,8 +68,9 @@ class Reviews extends REST_Controller {
         $learners = json_decode($json, true);
 
         //Get all the assessors from OneFile
-        $json = $this->user->getUsers(5);
+        $json = $this->user->getUsers(array('Role' => 5));
         $assessors = json_decode($json, true);
+
 
         //Fetch reviews for the last month
         $firstDay = new \DateTime('first day of last month 00:00:00');
@@ -78,7 +79,7 @@ class Reviews extends REST_Controller {
         $dateFrom = $firstDay->format(DateTime::ATOM); 
         $dateTo = $lastDay->format(DateTime::ATOM);
 
-        $parameters = [];
+        $parameters = array();
         
         $parameters['Status'] = 1;
         $parameters['DateFrom'] = $dateFrom;
@@ -105,6 +106,8 @@ class Reviews extends REST_Controller {
             $reviewCounter = 0;
             foreach($reviews as $review):
                 
+                echo ".";
+                
                 $reviewCounter++;
 
                 $fullReview = json_decode($this->review->getReview($review['ID']), true);
@@ -113,7 +116,7 @@ class Reviews extends REST_Controller {
                 $reviewID = $fullReview['ID'];
                 $userID = $fullReview['LearnerID'];
 
-                //Onl=y reviews that have an assessor and have been signed by the assessor
+                //Only reviews that have an assessor and have been signed by the assessor
                 if(isset($fullReview['AssessorID']) and isset($fullReview['AssessorSignedOn'])):
                     $assessorID = $fullReview['AssessorID'];
 
@@ -182,13 +185,16 @@ class Reviews extends REST_Controller {
             $sheet->setSelectedCell('A2');
 
             //Set filename
-            $excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
+            //$excelFile = '/webroot/storage/reviews/Review-' . $firstDay->format('M-yy') . '.xlsx';
 
-            //$excelFile = FCPATH . 'output/Review-' . $firstDay->format('M-yy') . '.xlsx';
+            $excelFile = FCPATH . 'output/Review-' . $firstDay->format('M-yy') . '.xlsx';
 
 
             $writer = new Xlsx($spreadsheet);
             $writer->save($excelFile);
+
+            echo "Job completed. Reviews found: $counter".PHP_EOL;
+            die();
 
             try {
                 //Tell PHPMailer to use SMTP

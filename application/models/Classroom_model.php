@@ -119,6 +119,9 @@ class Classroom_model extends CI_Model {
 			'form_params' => $parameters
 		]);
 
+            var_dump($response);
+            die();
+
 		//Return response
 		return $response->getBody();
 

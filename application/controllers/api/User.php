@@ -38,7 +38,7 @@ class User extends REST_Controller {
     }
  
     //Get all users (Learners)
-    public function index_get()
+    public function index_post()
     {
         $json = $this->user->getUsers();
         $return = json_decode($json, true);
@@ -101,7 +101,35 @@ class User extends REST_Controller {
         }
 
 
-    }    
+    }
+
+    public function id_delete($id)
+    {
+        $id = (int) $id;
+
+        // Validate the id.
+        if ($id <= 0)
+        {
+            // Invalid id, set the response and exit.
+            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+        }
+
+        $json = $this->user->deleteUser($id);
+        $return = json_decode($json, true);
+
+        if (!empty($return))
+        {
+            $this->set_response($return, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+        else
+        {
+            $this->set_response([
+                'status' => FALSE,
+                'error' => 'User could not be found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+    }
 
     // public function assign_post($standardId, $learnerId)
     // {
